@@ -342,6 +342,23 @@
       }
     }
   </style>
+
+  <!-- Firebase (Firestore) 用スクリプト。後で firebaseConfig を設定するとオンライン共有に移行できます -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCy6HHiGMsaXMCVkftoIlZIyJdp3YM7DsI",
+  authDomain: "todo-f9789.firebaseapp.com",
+  projectId: "todo-f9789",
+  storageBucket: "todo-f9789.firebasestorage.app",
+  messagingSenderId: "104760372026",
+  appId: "1:104760372026:web:f0e0a36f33602ae5f57e03",
+  measurementId: "G-P8M48P4LTT"
+};
+firebase.initializeApp(firebaseConfig);
+window.db = firebase.firestore();
+  </script>
 </head>
 <body>
   <div class="wrapper">
@@ -623,7 +640,7 @@
   </div>
 
   <script>
-    // ★ ブラウザ本体の LS は使わず、ページ内だけで有効なメモリストアを使う
+    // ★ ブラウザ本体の LS は使わず、ページ内だけで有効なメモリストア(LS)を使う
     const __MEM_STORE = {};
     const LS = {
       getItem(key) {
