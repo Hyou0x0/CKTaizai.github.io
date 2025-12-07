@@ -252,13 +252,14 @@
       width: 120px;
     }
 
-    /* ★ 配置ヘッダーと時間ヘッダーの高さを揃える */
-    .place-head,
-    .schedule-table thead th.time-head {
-      height: 40px;        /* 好きな値でOK。32〜44ぐらいで調整 */
-      line-height: 40px;   /* 縦位置も中央寄せ */
-      box-sizing: border-box;
-    }
+/* ★ 配置ヘッダーと時間ヘッダーの高さを揃える */
+.place-head,
+.schedule-table thead th.time-head {
+  height: 40px;        /* 好きな値でOK。32〜44ぐらいで調整 */
+  line-height: 40px;   /* 縦位置も中央寄せ */
+  box-sizing: border-box;
+}
+
 
     /* 月間シフト編集エリア */
     .month-shift-editor {
@@ -324,12 +325,12 @@
       color: #666;
     }
 
+
     /* 配置者の手入力欄は現在は使用しないので非表示 */
     .names-wrapper {
       display: none !important;
     }
-
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
       .wrapper {
         padding: 8px;
       }
@@ -341,30 +342,12 @@
       }
     }
   </style>
-
-  <!-- Firebase (Firestore) 用スクリプト -->
-  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
-  <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCNUZdZeE9t6EFg9tDhSVF2qPcgiyPlrUs",
-    authDomain: "cktaizai-c197d.firebaseapp.com",
-    projectId: "cktaizai-c197d",
-    storageBucket: "cktaizai-c197d.firebasestorage.app",
-    messagingSenderId: "434618441616",
-    appId: "1:434618441616:web:dd87d2d1f9385b697a9d15",
-    measurementId: "G-1BZNEGWFZE"
-  };
-    firebase.initializeApp(firebaseConfig);
-    window.db = firebase.firestore();
-  </script>
 </head>
 <body>
   <div class="wrapper">
     <div class="controls">
       <label>
         日付:
-        <!-- JSで金土日の一覧に差し替える -->
         <select id="daySelect">
           <option value="fri">金曜 → 土曜</option>
           <option value="sat" selected>土曜 → 日曜</option>
@@ -388,9 +371,7 @@
             <thead>
               <tr><th class="place-head">配置</th></tr>
             </thead>
-            <tbody>
-              <!-- JSで行を生成 -->
-            </tbody>
+<tbody><tr data-place="厩舎長" style="height: 43px;"><td data-slot="0" class="slot-cell state-本">本</td><td data-slot="1" class="slot-cell state-本">本</td><td data-slot="2" class="slot-cell state-待">待</td><td data-slot="3" class="slot-cell state-本">本</td><td data-slot="4" class="slot-cell state-本">本</td><td data-slot="5" class="slot-cell state-本">本</td><td data-slot="6" class="slot-cell state-本">本</td><td data-slot="7" class="slot-cell state-休">休</td><td data-slot="8" class="slot-cell state-休">休</td><td data-slot="9" class="slot-cell state-本">本</td><td data-slot="10" class="slot-cell state-本">本</td><td data-slot="11" class="slot-cell state-本">本</td><td data-slot="12" class="slot-cell state-本">本</td><td data-slot="13" class="slot-cell state-本">本</td><td data-slot="14" class="slot-cell state-本">本</td><td data-slot="15" class="slot-cell state-本">本</td><td data-slot="16" class="slot-cell state-本">本</td><td data-slot="17" class="slot-cell state-本">本</td><td data-slot="18" class="slot-cell state-本">本</td><td data-slot="19" class="slot-cell state-休">休</td><td data-slot="20" class="slot-cell state-休">休</td><td data-slot="21" class="slot-cell state-本">本</td><td data-slot="22" class="slot-cell state-本">本</td><td data-slot="23" class="slot-cell state-本">本</td><td data-slot="24" class="slot-cell state-本">本</td><td data-slot="25" class="slot-cell state-休">休</td><td data-slot="26" class="slot-cell state-本">本</td><td data-slot="27" class="slot-cell state-本">本</td><td data-slot="28" class="slot-cell state-本 now-col">本</td><td data-slot="29" class="slot-cell state-仮眠">仮眠</td><td data-slot="30" class="slot-cell state-仮眠">仮眠</td><td data-slot="31" class="slot-cell state-仮眠">仮眠</td><td data-slot="32" class="slot-cell state-仮眠">仮眠</td><td data-slot="33" class="slot-cell state-仮眠">仮眠</td><td data-slot="34" class="slot-cell state-仮眠">仮眠</td><td data-slot="35" class="slot-cell state-仮眠">仮眠</td><td data-slot="36" class="slot-cell state-仮眠">仮眠</td><td data-slot="37" class="slot-cell state-本">本</td><td data-slot="38" class="slot-cell state-本">本</td><td data-slot="39" class="slot-cell state-本">本</td><td data-slot="40" class="slot-cell state-本">本</td><td data-slot="41" class="slot-cell state-本">本</td><td data-slot="42" class="slot-cell state-本">本</td><td data-slot="43" class="slot-cell state-本">本</td><td data-slot="44" class="slot-cell state-本">本</td><td data-slot="45" class="slot-cell state-本">本</td><td data-slot="46" class="slot-cell state-本">本</td><td data-slot="47" class="slot-cell state-本">本</td><td data-slot="48" class="slot-cell state-本">本</td></tr><tr data-place="外厩門 1" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-立">立</td><td data-slot="2" class="slot-cell state-待">待</td><td data-slot="3" class="slot-cell state-東">東</td><td data-slot="4" class="slot-cell state-東">東</td><td data-slot="5" class="slot-cell state-休">休</td><td data-slot="6" class="slot-cell state-立">立</td><td data-slot="7" class="slot-cell state-座">座</td><td data-slot="8" class="slot-cell state-立">立</td><td data-slot="9" class="slot-cell state-東">東</td><td data-slot="10" class="slot-cell state-東">東</td><td data-slot="11" class="slot-cell state-休">休</td><td data-slot="12" class="slot-cell state-休">休</td><td data-slot="13" class="slot-cell state-座">座</td><td data-slot="14" class="slot-cell state-立">立</td><td data-slot="15" class="slot-cell state-休">休</td><td data-slot="16" class="slot-cell state-休">休</td><td data-slot="17" class="slot-cell state-東">東</td><td data-slot="18" class="slot-cell state-東">東</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td><td data-slot="21" class="slot-cell state-仮眠">仮眠</td><td data-slot="22" class="slot-cell state-仮眠">仮眠</td><td data-slot="23" class="slot-cell state-仮眠">仮眠</td><td data-slot="24" class="slot-cell state-仮眠">仮眠</td><td data-slot="25" class="slot-cell state-仮眠">仮眠</td><td data-slot="26" class="slot-cell state-仮眠">仮眠</td><td data-slot="27" class="slot-cell state-仮眠">仮眠</td><td data-slot="28" class="slot-cell state-仮眠 now-col">仮眠</td><td data-slot="29" class="slot-cell state-巡">巡</td><td data-slot="30" class="slot-cell state-巡">巡</td><td data-slot="31" class="slot-cell state-巡">巡</td><td data-slot="32" class="slot-cell state-座">座</td><td data-slot="33" class="slot-cell state-座">座</td><td data-slot="34" class="slot-cell state-座">座</td><td data-slot="35" class="slot-cell state-巡">巡</td><td data-slot="36" class="slot-cell state-巡">巡</td><td data-slot="37" class="slot-cell state-巡">巡</td><td data-slot="38" class="slot-cell state-座">座</td><td data-slot="39" class="slot-cell state-立">立</td><td data-slot="40" class="slot-cell state-座">座</td><td data-slot="41" class="slot-cell state-立">立</td><td data-slot="42" class="slot-cell state-座">座</td><td data-slot="43" class="slot-cell state-立">立</td><td data-slot="44" class="slot-cell state-座">座</td><td data-slot="45" class="slot-cell state-座">座</td><td data-slot="46" class="slot-cell state-立">立</td><td data-slot="47" class="slot-cell state-座">座</td><td data-slot="48" class="slot-cell state-掃">掃</td></tr><tr data-place="外厩門 2" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-座">座</td><td data-slot="2" class="slot-cell state-待">待</td><td data-slot="3" class="slot-cell state-立">立</td><td data-slot="4" class="slot-cell state-座">座</td><td data-slot="5" class="slot-cell state-東">東</td><td data-slot="6" class="slot-cell state-東">東</td><td data-slot="7" class="slot-cell state-休">休</td><td data-slot="8" class="slot-cell state-休">休</td><td data-slot="9" class="slot-cell state-座">座</td><td data-slot="10" class="slot-cell state-立">立</td><td data-slot="11" class="slot-cell state-座">座</td><td data-slot="12" class="slot-cell state-立">立</td><td data-slot="13" class="slot-cell state-東">東</td><td data-slot="14" class="slot-cell state-東">東</td><td data-slot="15" class="slot-cell state-座">座</td><td data-slot="16" class="slot-cell state-立">立</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-立">立</td><td data-slot="19" class="slot-cell state-休">休</td><td data-slot="20" class="slot-cell state-休">休</td><td data-slot="21" class="slot-cell state-座">座</td><td data-slot="22" class="slot-cell state-座">座</td><td data-slot="23" class="slot-cell state-休">休</td><td data-slot="24" class="slot-cell state-巡">巡</td><td data-slot="25" class="slot-cell state-巡">巡</td><td data-slot="26" class="slot-cell state-巡">巡</td><td data-slot="27" class="slot-cell state-座">座</td><td data-slot="28" class="slot-cell state-座 now-col">座</td><td data-slot="29" class="slot-cell state-座">座</td><td data-slot="30" class="slot-cell state-座">座</td><td data-slot="31" class="slot-cell state-座">座</td><td data-slot="32" class="slot-cell state-巡">巡</td><td data-slot="33" class="slot-cell state-巡">巡</td><td data-slot="34" class="slot-cell state-巡">巡</td><td data-slot="35" class="slot-cell state-座">座</td><td data-slot="36" class="slot-cell state-仮眠">仮眠</td><td data-slot="37" class="slot-cell state-仮眠">仮眠</td><td data-slot="38" class="slot-cell state-仮眠">仮眠</td><td data-slot="39" class="slot-cell state-仮眠">仮眠</td><td data-slot="40" class="slot-cell state-仮眠">仮眠</td><td data-slot="41" class="slot-cell state-仮眠">仮眠</td><td data-slot="42" class="slot-cell state-仮眠">仮眠</td><td data-slot="43" class="slot-cell state-座">座</td><td data-slot="44" class="slot-cell state-立">立</td><td data-slot="45" class="slot-cell state-東">東</td><td data-slot="46" class="slot-cell state-東">東</td><td data-slot="47" class="slot-cell state-休">休</td><td data-slot="48" class="slot-cell state-立">立</td></tr><tr data-place="外厩門 3" style="height: 43px;"><td data-slot="0" class="slot-cell state-立">立</td><td data-slot="1" class="slot-cell state-待">待</td><td data-slot="2" class="slot-cell state-立">立</td><td data-slot="3" class="slot-cell state-座">座</td><td data-slot="4" class="slot-cell state-立">立</td><td data-slot="5" class="slot-cell state-座">座</td><td data-slot="6" class="slot-cell state-休">休</td><td data-slot="7" class="slot-cell state-立">立</td><td data-slot="8" class="slot-cell state-座">座</td><td data-slot="9" class="slot-cell state-休">休</td><td data-slot="10" class="slot-cell state-休">休</td><td data-slot="11" class="slot-cell state-立">立</td><td data-slot="12" class="slot-cell state-座">座</td><td data-slot="13" class="slot-cell state-立">立</td><td data-slot="14" class="slot-cell state-座">座</td><td data-slot="15" class="slot-cell state-東">東</td><td data-slot="16" class="slot-cell state-東">東</td><td data-slot="17" class="slot-cell state-休">休</td><td data-slot="18" class="slot-cell state-休">休</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td><td data-slot="21" class="slot-cell state-東">東</td><td data-slot="22" class="slot-cell state-東">東</td><td data-slot="23" class="slot-cell state-座">座</td><td data-slot="24" class="slot-cell state-座">座</td><td data-slot="25" class="slot-cell state-座">座</td><td data-slot="26" class="slot-cell state-座">座</td><td data-slot="27" class="slot-cell state-巡">巡</td><td data-slot="28" class="slot-cell state-巡 now-col">巡</td><td data-slot="29" class="slot-cell state-仮眠">仮眠</td><td data-slot="30" class="slot-cell state-仮眠">仮眠</td><td data-slot="31" class="slot-cell state-仮眠">仮眠</td><td data-slot="32" class="slot-cell state-仮眠">仮眠</td><td data-slot="33" class="slot-cell state-仮眠">仮眠</td><td data-slot="34" class="slot-cell state-仮眠">仮眠</td><td data-slot="35" class="slot-cell state-仮眠">仮眠</td><td data-slot="36" class="slot-cell state-座">座</td><td data-slot="37" class="slot-cell state-座">座</td><td data-slot="38" class="slot-cell state-座">座</td><td data-slot="39" class="slot-cell state-座">座</td><td data-slot="40" class="slot-cell state-立">立</td><td data-slot="41" class="slot-cell state-座">座</td><td data-slot="42" class="slot-cell state-立">立</td><td data-slot="43" class="slot-cell state-東">東</td><td data-slot="44" class="slot-cell state-東">東</td><td data-slot="45" class="slot-cell state-立">立</td><td data-slot="46" class="slot-cell state-座">座</td><td data-slot="47" class="slot-cell state-立">立</td><td data-slot="48" class="slot-cell state-座">座</td></tr><tr data-place="外厩門 4" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-待">待</td><td data-slot="2" class="slot-cell state-座">座</td><td data-slot="3" class="slot-cell state-休">休</td><td data-slot="4" class="slot-cell state-休">休</td><td data-slot="5" class="slot-cell state-立">立</td><td data-slot="6" class="slot-cell state-座">座</td><td data-slot="7" class="slot-cell state-東">東</td><td data-slot="8" class="slot-cell state-東">東</td><td data-slot="9" class="slot-cell state-立">立</td><td data-slot="10" class="slot-cell state-座">座</td><td data-slot="11" class="slot-cell state-東">東</td><td data-slot="12" class="slot-cell state-東">東</td><td data-slot="13" class="slot-cell state-休">休</td><td data-slot="14" class="slot-cell state-休">休</td><td data-slot="15" class="slot-cell state-立">立</td><td data-slot="16" class="slot-cell state-座">座</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-東">東</td><td data-slot="20" class="slot-cell state-東">東</td><td data-slot="21" class="slot-cell state-巡">巡</td><td data-slot="22" class="slot-cell state-巡">巡</td><td data-slot="23" class="slot-cell state-巡">巡</td><td data-slot="24" class="slot-cell empty"></td><td data-slot="25" class="slot-cell empty"></td><td data-slot="26" class="slot-cell empty"></td><td data-slot="27" class="slot-cell empty"></td><td data-slot="28" class="slot-cell empty now-col"></td><td data-slot="29" class="slot-cell empty"></td><td data-slot="30" class="slot-cell empty"></td><td data-slot="31" class="slot-cell empty"></td><td data-slot="32" class="slot-cell empty"></td><td data-slot="33" class="slot-cell empty"></td><td data-slot="34" class="slot-cell empty"></td><td data-slot="35" class="slot-cell empty"></td><td data-slot="36" class="slot-cell empty"></td><td data-slot="37" class="slot-cell empty"></td><td data-slot="38" class="slot-cell empty"></td><td data-slot="39" class="slot-cell empty"></td><td data-slot="40" class="slot-cell empty"></td><td data-slot="41" class="slot-cell empty"></td><td data-slot="42" class="slot-cell empty"></td><td data-slot="43" class="slot-cell empty"></td><td data-slot="44" class="slot-cell empty"></td><td data-slot="45" class="slot-cell empty"></td><td data-slot="46" class="slot-cell empty"></td><td data-slot="47" class="slot-cell empty"></td><td data-slot="48" class="slot-cell empty"></td></tr><tr data-place="西通用門 4" style="height: 43px;"><td data-slot="0" class="slot-cell empty"></td><td data-slot="1" class="slot-cell empty"></td><td data-slot="2" class="slot-cell empty"></td><td data-slot="3" class="slot-cell empty"></td><td data-slot="4" class="slot-cell empty"></td><td data-slot="5" class="slot-cell empty"></td><td data-slot="6" class="slot-cell empty"></td><td data-slot="7" class="slot-cell empty"></td><td data-slot="8" class="slot-cell empty"></td><td data-slot="9" class="slot-cell empty"></td><td data-slot="10" class="slot-cell empty"></td><td data-slot="11" class="slot-cell empty"></td><td data-slot="12" class="slot-cell empty"></td><td data-slot="13" class="slot-cell empty"></td><td data-slot="14" class="slot-cell empty"></td><td data-slot="15" class="slot-cell empty"></td><td data-slot="16" class="slot-cell empty"></td><td data-slot="17" class="slot-cell empty"></td><td data-slot="18" class="slot-cell empty"></td><td data-slot="19" class="slot-cell empty"></td><td data-slot="20" class="slot-cell empty"></td><td data-slot="21" class="slot-cell empty"></td><td data-slot="22" class="slot-cell empty"></td><td data-slot="23" class="slot-cell empty"></td><td data-slot="24" class="slot-cell state-座">座</td><td data-slot="25" class="slot-cell state-座">座</td><td data-slot="26" class="slot-cell state-座">座</td><td data-slot="27" class="slot-cell state-座">座</td><td data-slot="28" class="slot-cell state-休 now-col">休</td><td data-slot="29" class="slot-cell state-仮眠">仮眠</td><td data-slot="30" class="slot-cell state-仮眠">仮眠</td><td data-slot="31" class="slot-cell state-仮眠">仮眠</td><td data-slot="32" class="slot-cell state-仮眠">仮眠</td><td data-slot="33" class="slot-cell state-仮眠">仮眠</td><td data-slot="34" class="slot-cell state-仮眠">仮眠</td><td data-slot="35" class="slot-cell state-仮眠">仮眠</td><td data-slot="36" class="slot-cell state-仮眠">仮眠</td><td data-slot="37" class="slot-cell state-座">座</td><td data-slot="38" class="slot-cell state-巡">巡</td><td data-slot="39" class="slot-cell state-巡">巡</td><td data-slot="40" class="slot-cell state-巡">巡</td><td data-slot="41" class="slot-cell state-巡">巡</td><td data-slot="42" class="slot-cell state-座">座</td><td data-slot="43" class="slot-cell state-立">立</td><td data-slot="44" class="slot-cell state-座">座</td><td data-slot="45" class="slot-cell state-立">立</td><td data-slot="46" class="slot-cell state-掃">掃</td><td data-slot="47" class="slot-cell state-休">休</td><td data-slot="48" class="slot-cell state-座">座</td></tr><tr data-place="西通用門 5" style="height: 43px;"><td data-slot="0" class="slot-cell state-立">立</td><td data-slot="1" class="slot-cell state-待">待</td><td data-slot="2" class="slot-cell state-座">座</td><td data-slot="3" class="slot-cell state-休">休</td><td data-slot="4" class="slot-cell state-休">休</td><td data-slot="5" class="slot-cell state-立">立</td><td data-slot="6" class="slot-cell state-座">座</td><td data-slot="7" class="slot-cell state-本">本</td><td data-slot="8" class="slot-cell state-本">本</td><td data-slot="9" class="slot-cell state-立">立</td><td data-slot="10" class="slot-cell state-座">座</td><td data-slot="11" class="slot-cell state-休">休</td><td data-slot="12" class="slot-cell state-立">立</td><td data-slot="13" class="slot-cell state-座">座</td><td data-slot="14" class="slot-cell state-立">立</td><td data-slot="15" class="slot-cell state-休">休</td><td data-slot="16" class="slot-cell state-休">休</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td><td data-slot="21" class="slot-cell state-仮眠">仮眠</td><td data-slot="22" class="slot-cell state-仮眠">仮眠</td><td data-slot="23" class="slot-cell state-仮眠">仮眠</td><td data-slot="24" class="slot-cell state-仮眠">仮眠</td><td data-slot="25" class="slot-cell state-仮眠">仮眠</td><td data-slot="26" class="slot-cell state-仮眠">仮眠</td><td data-slot="27" class="slot-cell state-仮眠">仮眠</td><td data-slot="28" class="slot-cell state-仮眠 now-col">仮眠</td><td data-slot="29" class="slot-cell state-座">座</td><td data-slot="30" class="slot-cell state-座">座</td><td data-slot="31" class="slot-cell state-座">座</td><td data-slot="32" class="slot-cell state-本">本</td><td data-slot="33" class="slot-cell state-本">本</td><td data-slot="34" class="slot-cell state-本">本</td><td data-slot="35" class="slot-cell state-巡">巡</td><td data-slot="36" class="slot-cell state-巡">巡</td><td data-slot="37" class="slot-cell state-巡">巡</td><td data-slot="38" class="slot-cell state-座">座</td><td data-slot="39" class="slot-cell state-座">座</td><td data-slot="40" class="slot-cell state-座">座</td><td data-slot="41" class="slot-cell state-座">座</td><td data-slot="42" class="slot-cell state-立">立</td><td data-slot="43" class="slot-cell state-座">座</td><td data-slot="44" class="slot-cell state-立">立</td><td data-slot="45" class="slot-cell state-休">休</td><td data-slot="46" class="slot-cell state-座">座</td><td data-slot="47" class="slot-cell state-立">立</td><td data-slot="48" class="slot-cell state-掃">掃</td></tr><tr data-place="西通用門 6" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-立">立</td><td data-slot="2" class="slot-cell state-本">本</td><td data-slot="3" class="slot-cell state-立">立</td><td data-slot="4" class="slot-cell state-座">座</td><td data-slot="5" class="slot-cell state-休">休</td><td data-slot="6" class="slot-cell state-立">立</td><td data-slot="7" class="slot-cell state-座">座</td><td data-slot="8" class="slot-cell state-立">立</td><td data-slot="9" class="slot-cell state-座">座</td><td data-slot="10" class="slot-cell state-立">立</td><td data-slot="11" class="slot-cell state-座">座</td><td data-slot="12" class="slot-cell state-休">休</td><td data-slot="13" class="slot-cell state-休">休</td><td data-slot="14" class="slot-cell state-座">座</td><td data-slot="15" class="slot-cell state-立">立</td><td data-slot="16" class="slot-cell state-座">座</td><td data-slot="17" class="slot-cell state-休">休</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td><td data-slot="21" class="slot-cell state-巡">巡</td><td data-slot="22" class="slot-cell state-巡">巡</td><td data-slot="23" class="slot-cell state-巡">巡</td><td data-slot="24" class="slot-cell state-休">休</td><td data-slot="25" class="slot-cell state-座">座</td><td data-slot="26" class="slot-cell state-座">座</td><td data-slot="27" class="slot-cell state-巡">巡</td><td data-slot="28" class="slot-cell state-巡 now-col">巡</td><td data-slot="29" class="slot-cell state-本">本</td><td data-slot="30" class="slot-cell state-本">本</td><td data-slot="31" class="slot-cell state-本">本</td><td data-slot="32" class="slot-cell state-巡">巡</td><td data-slot="33" class="slot-cell state-巡">巡</td><td data-slot="34" class="slot-cell state-巡">巡</td><td data-slot="35" class="slot-cell state-座">座</td><td data-slot="36" class="slot-cell state-座">座</td><td data-slot="37" class="slot-cell state-仮眠">仮眠</td><td data-slot="38" class="slot-cell state-仮眠">仮眠</td><td data-slot="39" class="slot-cell state-仮眠">仮眠</td><td data-slot="40" class="slot-cell state-仮眠">仮眠</td><td data-slot="41" class="slot-cell state-仮眠">仮眠</td><td data-slot="42" class="slot-cell state-仮眠">仮眠</td><td data-slot="43" class="slot-cell state-仮眠">仮眠</td><td data-slot="44" class="slot-cell state-仮眠">仮眠</td><td data-slot="45" class="slot-cell state-待">待</td><td data-slot="46" class="slot-cell state-休">休</td><td data-slot="47" class="slot-cell state-座">座</td><td data-slot="48" class="slot-cell state-立">立</td></tr><tr data-place="西通用門 7" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-座">座</td><td data-slot="2" class="slot-cell state-立">立</td><td data-slot="3" class="slot-cell state-座">座</td><td data-slot="4" class="slot-cell state-立">立</td><td data-slot="5" class="slot-cell state-座">座</td><td data-slot="6" class="slot-cell state-待">待</td><td data-slot="7" class="slot-cell state-立">立</td><td data-slot="8" class="slot-cell state-座">座</td><td data-slot="9" class="slot-cell state-休">休</td><td data-slot="10" class="slot-cell state-休">休</td><td data-slot="11" class="slot-cell state-立">立</td><td data-slot="12" class="slot-cell state-座">座</td><td data-slot="13" class="slot-cell state-立">立</td><td data-slot="14" class="slot-cell state-待">待</td><td data-slot="15" class="slot-cell state-座">座</td><td data-slot="16" class="slot-cell state-立">立</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-休">休</td><td data-slot="19" class="slot-cell state-本">本</td><td data-slot="20" class="slot-cell state-本">本</td><td data-slot="21" class="slot-cell state-座">座</td><td data-slot="22" class="slot-cell state-座">座</td><td data-slot="23" class="slot-cell state-座">座</td><td data-slot="24" class="slot-cell state-巡">巡</td><td data-slot="25" class="slot-cell state-巡">巡</td><td data-slot="26" class="slot-cell state-巡">巡</td><td data-slot="27" class="slot-cell state-休">休</td><td data-slot="28" class="slot-cell state-座 now-col">座</td><td data-slot="29" class="slot-cell state-巡">巡</td><td data-slot="30" class="slot-cell state-巡">巡</td><td data-slot="31" class="slot-cell state-巡">巡</td><td data-slot="32" class="slot-cell state-座">座</td><td data-slot="33" class="slot-cell state-座">座</td><td data-slot="34" class="slot-cell state-座">座</td><td data-slot="35" class="slot-cell state-本">本</td><td data-slot="36" class="slot-cell state-本">本</td><td data-slot="37" class="slot-cell state-仮眠">仮眠</td><td data-slot="38" class="slot-cell state-仮眠">仮眠</td><td data-slot="39" class="slot-cell state-仮眠">仮眠</td><td data-slot="40" class="slot-cell state-仮眠">仮眠</td><td data-slot="41" class="slot-cell state-仮眠">仮眠</td><td data-slot="42" class="slot-cell state-仮眠">仮眠</td><td data-slot="43" class="slot-cell state-仮眠">仮眠</td><td data-slot="44" class="slot-cell state-仮眠">仮眠</td><td data-slot="45" class="slot-cell state-座">座</td><td data-slot="46" class="slot-cell state-立">立</td><td data-slot="47" class="slot-cell state-休">休</td><td data-slot="48" class="slot-cell state-座">座</td></tr></tbody>
           </table>
         </div>
         <!-- 右：時間スロット -->
@@ -533,7 +514,7 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- JSで行を生成 -->
+                <!-- JSで行を生成（初期値は土曜用データから埋める） -->
               </tbody>
             </table>
           </div>
@@ -587,9 +568,7 @@
                   <th class="time-head" data-slot="24">20:00</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- JSで行を生成 -->
-              </tbody>
+<tbody><tr data-place="厩舎長" style="height: 43px;"><td data-slot="0" class="slot-cell state-本">本</td><td data-slot="1" class="slot-cell state-本">本</td><td data-slot="2" class="slot-cell state-待">待</td><td data-slot="3" class="slot-cell state-本">本</td><td data-slot="4" class="slot-cell state-本">本</td><td data-slot="5" class="slot-cell state-本">本</td><td data-slot="6" class="slot-cell state-休">休</td><td data-slot="7" class="slot-cell state-本">本</td><td data-slot="8" class="slot-cell state-本">本</td><td data-slot="9" class="slot-cell state-本">本</td><td data-slot="10" class="slot-cell state-本">本</td><td data-slot="11" class="slot-cell state-本">本</td><td data-slot="12" class="slot-cell state-本">本</td><td data-slot="13" class="slot-cell state-休">休</td><td data-slot="14" class="slot-cell state-本">本</td><td data-slot="15" class="slot-cell state-本">本</td><td data-slot="16" class="slot-cell state-本">本</td><td data-slot="17" class="slot-cell state-本">本</td><td data-slot="18" class="slot-cell state-本">本</td><td data-slot="19" class="slot-cell state-本">本</td><td data-slot="20" class="slot-cell state-本">本</td></tr><tr data-place="外厩門 1" style="height: 43px;"><td data-slot="0" class="slot-cell state-立">立</td><td data-slot="1" class="slot-cell state-座">座</td><td data-slot="2" class="slot-cell state-待">待</td><td data-slot="3" class="slot-cell state-立">立</td><td data-slot="4" class="slot-cell state-座">座</td><td data-slot="5" class="slot-cell state-休">休</td><td data-slot="6" class="slot-cell state-東">東</td><td data-slot="7" class="slot-cell state-東">東</td><td data-slot="8" class="slot-cell state-東">東</td><td data-slot="9" class="slot-cell state-休">休</td><td data-slot="10" class="slot-cell state-座">座</td><td data-slot="11" class="slot-cell state-立">立</td><td data-slot="12" class="slot-cell state-休">休</td><td data-slot="13" class="slot-cell state-座">座</td><td data-slot="14" class="slot-cell state-立">立</td><td data-slot="15" class="slot-cell state-座">座</td><td data-slot="16" class="slot-cell state-座">座</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td></tr><tr data-place="外厩門 2" style="height: 43px;"><td data-slot="0" class="slot-cell state-準">準</td><td data-slot="1" class="slot-cell state-立">立</td><td data-slot="2" class="slot-cell state-座">座</td><td data-slot="3" class="slot-cell state-休">休</td><td data-slot="4" class="slot-cell state-立">立</td><td data-slot="5" class="slot-cell state-座">座</td><td data-slot="6" class="slot-cell state-立">立</td><td data-slot="7" class="slot-cell state-座">座</td><td data-slot="8" class="slot-cell state-立">立</td><td data-slot="9" class="slot-cell state-東">東</td><td data-slot="10" class="slot-cell state-東">東</td><td data-slot="11" class="slot-cell state-休">休</td><td data-slot="12" class="slot-cell state-座">座</td><td data-slot="13" class="slot-cell state-立">立</td><td data-slot="14" class="slot-cell state-休">休</td><td data-slot="15" class="slot-cell state-東">東</td><td data-slot="16" class="slot-cell state-東">東</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-東">東</td><td data-slot="20" class="slot-cell state-東">東</td></tr><tr data-place="外厩門 3" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-待">待</td><td data-slot="2" class="slot-cell state-立">立</td><td data-slot="3" class="slot-cell state-座">座</td><td data-slot="4" class="slot-cell state-休">休</td><td data-slot="5" class="slot-cell state-立">立</td><td data-slot="6" class="slot-cell state-座">座</td><td data-slot="7" class="slot-cell state-立">立</td><td data-slot="8" class="slot-cell state-座">座</td><td data-slot="9" class="slot-cell state-立">立</td><td data-slot="10" class="slot-cell state-休">休</td><td data-slot="11" class="slot-cell state-東">東</td><td data-slot="12" class="slot-cell state-東">東</td><td data-slot="13" class="slot-cell state-休">休</td><td data-slot="14" class="slot-cell state-座">座</td><td data-slot="15" class="slot-cell state-立">立</td><td data-slot="16" class="slot-cell state-座">座</td><td data-slot="17" class="slot-cell state-東">東</td><td data-slot="18" class="slot-cell state-東">東</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td></tr><tr data-place="外厩門 4" style="height: 43px;"><td data-slot="0" class="slot-cell empty"></td><td data-slot="1" class="slot-cell empty"></td><td data-slot="2" class="slot-cell empty"></td><td data-slot="3" class="slot-cell empty"></td><td data-slot="4" class="slot-cell empty"></td><td data-slot="5" class="slot-cell empty"></td><td data-slot="6" class="slot-cell empty"></td><td data-slot="7" class="slot-cell empty"></td><td data-slot="8" class="slot-cell state-休">休</td><td data-slot="9" class="slot-cell state-座">座</td><td data-slot="10" class="slot-cell state-立">立</td><td data-slot="11" class="slot-cell state-座">座</td><td data-slot="12" class="slot-cell state-立">立</td><td data-slot="13" class="slot-cell state-東">東</td><td data-slot="14" class="slot-cell state-東">東</td><td data-slot="15" class="slot-cell state-休">休</td><td data-slot="16" class="slot-cell empty"></td><td data-slot="17" class="slot-cell empty"></td><td data-slot="18" class="slot-cell empty"></td><td data-slot="19" class="slot-cell empty"></td><td data-slot="20" class="slot-cell empty"></td></tr><tr data-place="西通用門 4" style="height: 43px;"><td data-slot="0" class="slot-cell state-準">準</td><td data-slot="1" class="slot-cell state-立">立</td><td data-slot="2" class="slot-cell state-座">座</td><td data-slot="3" class="slot-cell state-休">休</td><td data-slot="4" class="slot-cell state-立">立</td><td data-slot="5" class="slot-cell state-座">座</td><td data-slot="6" class="slot-cell state-立">立</td><td data-slot="7" class="slot-cell state-座">座</td><td data-slot="8" class="slot-cell state-休">休</td><td data-slot="9" class="slot-cell empty"></td><td data-slot="10" class="slot-cell empty"></td><td data-slot="11" class="slot-cell empty"></td><td data-slot="12" class="slot-cell empty"></td><td data-slot="13" class="slot-cell empty"></td><td data-slot="14" class="slot-cell empty"></td><td data-slot="15" class="slot-cell state-休">休</td><td data-slot="16" class="slot-cell state-座">座</td><td data-slot="17" class="slot-cell state-座">座</td><td data-slot="18" class="slot-cell state-座">座</td><td data-slot="19" class="slot-cell state-座">座</td><td data-slot="20" class="slot-cell state-座">座</td></tr><tr data-place="西通用門 5" style="height: 43px;"><td data-slot="0" class="slot-cell state-立">立</td><td data-slot="1" class="slot-cell state-座">座</td><td data-slot="2" class="slot-cell state-立">立</td><td data-slot="3" class="slot-cell state-座">座</td><td data-slot="4" class="slot-cell state-待">待</td><td data-slot="5" class="slot-cell state-立">立</td><td data-slot="6" class="slot-cell state-座">座</td><td data-slot="7" class="slot-cell state-休">休</td><td data-slot="8" class="slot-cell state-立">立</td><td data-slot="9" class="slot-cell state-座">座</td><td data-slot="10" class="slot-cell state-立">立</td><td data-slot="11" class="slot-cell state-座">座</td><td data-slot="12" class="slot-cell state-座">座</td><td data-slot="13" class="slot-cell state-本">本</td><td data-slot="14" class="slot-cell state-立">立</td><td data-slot="15" class="slot-cell state-座">座</td><td data-slot="16" class="slot-cell empty"></td><td data-slot="17" class="slot-cell empty"></td><td data-slot="18" class="slot-cell empty"></td><td data-slot="19" class="slot-cell empty"></td><td data-slot="20" class="slot-cell empty"></td></tr><tr data-place="西通用門 6" style="height: 43px;"><td data-slot="0" class="slot-cell state-座">座</td><td data-slot="1" class="slot-cell state-待">待</td><td data-slot="2" class="slot-cell state-本">本</td><td data-slot="3" class="slot-cell state-立">立</td><td data-slot="4" class="slot-cell state-座">座</td><td data-slot="5" class="slot-cell state-休">休</td><td data-slot="6" class="slot-cell state-本">本</td><td data-slot="7" class="slot-cell state-立">立</td><td data-slot="8" class="slot-cell state-座">座</td><td data-slot="9" class="slot-cell state-立">立</td><td data-slot="10" class="slot-cell state-座">座</td><td data-slot="11" class="slot-cell state-立">立</td><td data-slot="12" class="slot-cell state-休">休</td><td data-slot="13" class="slot-cell state-座">座</td><td data-slot="14" class="slot-cell state-座">座</td><td data-slot="15" class="slot-cell state-立">立</td><td data-slot="16" class="slot-cell empty"></td><td data-slot="17" class="slot-cell empty"></td><td data-slot="18" class="slot-cell empty"></td><td data-slot="19" class="slot-cell empty"></td><td data-slot="20" class="slot-cell empty"></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -610,7 +589,7 @@
       <span><span class="legend-box state-準"></span>準</span>
     </div>
 
-    <!-- 名前入力パネル（現状非表示） -->
+    <!-- 名前入力パネル -->
     <div class="names-wrapper">
       <div class="names-panel" data-day="fri"></div>
       <div class="names-panel" data-day="sat"></div>
@@ -643,8 +622,116 @@
     </div>
   </div>
 
-  <script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+
+<script>
     (function(){
+      // === Firebase / Firestore 設定 & LOCAL_STORE ===
+      // ※ 必ず自分の Firebase プロジェクトの値に書き換えてください
+const firebaseConfig = {
+  apiKey: "AIzaSyCNUZdZeE9t6EFg9tDhSVF2qPcgiyPlrUs",
+  authDomain: "cktaizai-c197d.firebaseapp.com",
+  projectId: "cktaizai-c197d",
+  storageBucket: "cktaizai-c197d.firebasestorage.app",
+  messagingSenderId: "434618441616",
+  appId: "1:434618441616:web:dd87d2d1f9385b697a9d15",
+  measurementId: "G-1BZNEGWFZE"
+};
+      // Firestore 用のメモリ保存領域
+      const __FS_MEMORY = {};
+      let __fsInitialized = false;
+      let __fsDocRef = null;
+
+      if (typeof firebase !== "undefined" && firebase.apps && !firebase.apps.length) {
+        try {
+          firebase.initializeApp(firebaseConfig);
+        } catch (e) {
+          console.error("[Firebase] 初期化に失敗しました", e);
+        }
+      } else if (typeof firebase !== "undefined" && firebase.apps) {
+        // すでに初期化済み
+      }
+
+      if (typeof firebase !== "undefined" && firebase.firestore) {
+        const db = firebase.firestore();
+        __fsDocRef = db.collection("standSchedules").doc("weekend");
+        __fsDocRef.get().then((snap) => {
+          if (snap.exists) {
+            const data = snap.data();
+            if (data && data.data && typeof data.data === "object") {
+              Object.assign(__FS_MEMORY, data.data);
+            }
+          } else {
+            // ドキュメントがない場合は空データで作成
+            __fsDocRef.set({ data: {} }, { merge: true }).catch((e) => {
+              console.error("[Firestore] 初期データ作成に失敗しました", e);
+            });
+          }
+          __fsInitialized = true;
+          console.log("[Firestore] 読み込み完了");
+
+          // Firestore からの読み込みが完了したら localStorage 相当の読み込み処理をもう一度実行
+          try {
+            if (typeof loadCellsFromStorage === "function") {
+              loadCellsFromStorage();
+            }
+            if (typeof syncAllPlaceHeaders === "function") {
+              syncAllPlaceHeaders();
+            }
+            if (typeof normalizeTimeHeaders === "function") {
+              normalizeTimeHeaders();
+            }
+            if (typeof syncAllRowHeights === "function") {
+              syncAllRowHeights();
+            }
+          } catch (e) {
+            console.error("[Firestore] 初期反映処理でエラー", e);
+          }
+        }).catch((e) => {
+          console.error("[Firestore] 読み込みに失敗しました", e);
+          __fsInitialized = true;
+        });
+      } else {
+        console.warn("[Firebase] firebase.firestore が利用できません。LOCAL_STORE はメモリ上のみで動作します。");
+      }
+
+      function __pushFsMemory() {
+        if (!__fsDocRef || !__fsInitialized) return;
+        __fsDocRef.set({ data: __FS_MEMORY }, { merge: true }).catch((e) => {
+          console.error("[Firestore] 書き込みに失敗しました", e);
+        });
+      }
+
+      const LOCAL_STORE = {
+        getItem(key) {
+          return Object.prototype.hasOwnProperty.call(__FS_MEMORY, key) ? __FS_MEMORY[key] : null;
+        },
+        setItem(key, value) {
+          __FS_MEMORY[key] = String(value);
+          __pushFsMemory();
+        },
+        removeItem(key) {
+          if (Object.prototype.hasOwnProperty.call(__FS_MEMORY, key)) {
+            delete __FS_MEMORY[key];
+            __pushFsMemory();
+          }
+        },
+        clear() {
+          for (const k of Object.keys(__FS_MEMORY)) {
+            delete __FS_MEMORY[k];
+          }
+          __pushFsMemory();
+        },
+        key(n) {
+          const keys = Object.keys(__FS_MEMORY);
+          return keys[n] ?? null;
+        },
+        get length() {
+          return Object.keys(__FS_MEMORY).length;
+        }
+      };
+
       const PLACES = [
         "厩舎長",
         "外厩門 1",
@@ -667,197 +754,157 @@
       const msHeadRow = document.getElementById("monthShiftHeadRow");
       const msBody = document.getElementById("monthShiftBody");
 
-      // Firestore 設定
-      const scheduleDocRef = db.collection("standSchedule").doc("main");
-      let remoteConfig = {
-        monthShifts: {},
-        rotary: { sat: {}, sun: {} }
-      };
-      let currentMonthStr = "";
-      let currentMonthRows = [];
-      const namesStore = { fri: {}, sat: {}, sun: {} };
-
-      async function loadRemoteConfig() {
-        try {
-          const snap = await scheduleDocRef.get();
-          if (snap.exists) {
-            const data = snap.data() || {};
-            if (data.monthShifts && typeof data.monthShifts === "object") {
-              remoteConfig.monthShifts = data.monthShifts;
-            }
-            if (data.rotary && typeof data.rotary === "object") {
-              remoteConfig.rotary = data.rotary;
-            }
-          }
-        } catch (e) {
-          console.warn("Firestore 読み込み失敗", e);
-        }
-      }
-
-      async function saveRemoteConfig(partial) {
-        try {
-          // ローカルキャッシュも更新
-          remoteConfig = {
-            ...remoteConfig,
-            ...partial
-          };
-          await scheduleDocRef.set(partial, { merge: true });
-        } catch (e) {
-          console.warn("Firestore 保存失敗", e);
-        }
-      }
-
-      // 金曜49、土日ほか
+      // 金曜49、土日48
       const SLOT_COUNTS = {
         fri: 49,
         sat: 52,
         sun: 25
       };
 
-      // 土曜日の初期データ（確定版）＋金曜・日曜
+      // 土曜日の初期データ（確定版）
       const INITIAL_DATA = {
-        // =========================
-        // 金曜日（0〜48：49コ）
-        // =========================
-        fri: {
-          "厩舎長": [
-            "本", "本", "待", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "本", "本", "本", "本", "本",
-            "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
-            "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本"
-          ],
-          "外厩門 1": [
-            "座", "立", "待", "東", "東", "休", "立", "座", "立", "東", "東", "休", "休", "座", "立", "休", "休", "東",
-            "東", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座", "座", "座",
-            "巡", "巡", "巡", "座", "立", "座", "立", "座", "立", "座", "座", "立", "座", "掃"
-          ],
-          "外厩門 2": [
-            "座", "座", "待", "立", "座", "東", "東", "休", "休", "座", "立", "座", "立", "東", "東", "座", "立", "座",
-            "立", "休", "休", "座", "座", "休", "巡", "巡", "巡", "座", "座", "座", "座", "座", "巡", "巡", "巡", "座",
-            "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "休", "立"
-          ],
-          "外厩門 3": [
-            "立", "待", "立", "座", "立", "座", "休", "立", "座", "休", "休", "立", "座", "立", "座", "東", "東", "休",
-            "休", "座", "座", "東", "東", "座", "座", "座", "座", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
-            "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "東", "東", "立", "座", "立", "座"
-          ],
-          "外厩門 4": [
-            "座", "待", "座", "休", "休", "立", "座", "東", "東", "立", "座", "東", "東", "休", "休", "立", "座", "座",
-            "座", "東", "東", "巡", "巡", "巡", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", ""
-          ],
-          "西通用門 4": [
-            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "巡", "巡",
-            "巡", "巡", "座", "立", "座", "立", "掃", "休", "座"
-          ],
-          "西通用門 5": [
-            "立", "待", "座", "休", "休", "立", "座", "本", "本", "立", "座", "休", "立", "座", "立", "休", "休", "座",
-            "座", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "座", "座", "本", "本", "本",
-            "巡", "巡", "巡", "座", "座", "座", "座", "立", "座", "立", "休", "座", "立", "掃"
-          ],
-          "西通用門 6": [
-            "座", "立", "本", "立", "座", "休", "立", "座", "立", "座", "立", "座", "休", "休", "座", "立", "座", "休",
-            "座", "座", "座", "巡", "巡", "巡", "休", "座", "座", "巡", "巡", "本", "本", "本", "巡", "巡", "巡", "座",
-            "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "待", "休", "座", "立"
-          ],
-          "西通用門 7": [
-            "座", "座", "立", "座", "立", "座", "待", "立", "座", "休", "休", "立", "座", "立", "待", "座", "立", "座",
-            "休", "本", "本", "座", "座", "座", "巡", "巡", "巡", "休", "座", "巡", "巡", "巡", "座", "座", "座", "本",
-            "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "休", "座"
-          ]
-        },
+  // =========================
+  // 金曜日（0〜48：49コ）
+  // =========================
+  fri: {
+    "厩舎長": [
+      "本", "本", "待", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "本", "本", "本", "本", "本",
+      "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+      "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本"
+      ],
+    "外厩門 1": [
+      "座", "立", "待", "東", "東", "休", "立", "座", "立", "東", "東", "休", "休", "座", "立", "休", "休", "東",
+      "東", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座", "座", "座",
+      "巡", "巡", "巡", "座", "立", "座", "立", "座", "立", "座", "座", "立", "座", "掃"
+      ],
+    "外厩門 2": [
+      "座", "座", "待", "立", "座", "東", "東", "休", "休", "座", "立", "座", "立", "東", "東", "座", "立", "座",
+      "立", "休", "休", "座", "座", "休", "巡", "巡", "巡", "座", "座", "座", "座", "座", "巡", "巡", "巡", "座",
+      "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "休", "立"
+      ],
+    "外厩門 3": [
+      "立", "待", "立", "座", "立", "座", "休", "立", "座", "休", "休", "立", "座", "立", "座", "東", "東", "休",
+      "休", "座", "座", "東", "東", "座", "座", "座", "座", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+      "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "東", "東", "立", "座", "立", "座"
+      ],
+    "外厩門 4": [
+      "座", "待", "座", "休", "休", "立", "座", "東", "東", "立", "座", "東", "東", "休", "休", "立", "座", "座",
+      "座", "東", "東", "巡", "巡", "巡", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", ""
+      ],
+    "西通用門 4": [
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "巡", "巡",
+      "巡", "巡", "座", "立", "座", "立", "掃", "休", "座"
+      ],
+    "西通用門 5": [
+      "立", "待", "座", "休", "休", "立", "座", "本", "本", "立", "座", "休", "立", "座", "立", "休", "休", "座",
+      "座", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "座", "座", "本", "本", "本",
+      "巡", "巡", "巡", "座", "座", "座", "座", "立", "座", "立", "休", "座", "立", "掃"
+      ],
+    "西通用門 6": [
+      "座", "立", "本", "立", "座", "休", "立", "座", "立", "座", "立", "座", "休", "休", "座", "立", "座", "休",
+      "座", "座", "座", "巡", "巡", "巡", "休", "座", "座", "巡", "巡", "本", "本", "本", "巡", "巡", "巡", "座",
+      "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "待", "休", "座", "立"
+      ],
+    "西通用門 7": [
+      "座", "座", "立", "座", "立", "座", "待", "立", "座", "休", "休", "立", "座", "立", "待", "座", "立", "座",
+      "休", "本", "本", "座", "座", "座", "巡", "巡", "巡", "休", "座", "巡", "巡", "巡", "座", "座", "座", "本",
+      "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "休", "座"
+      ]
+  },
 
-        // =========================
-        // 土曜日（8:00〜翌10:00：52コ・0〜3は8:00〜9:30の空白）
-        // =========================
-        sat: {
-          "厩舎長": [
-            "", "", "", "", "本", "本", "休", "本", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "休",
-            "本", "本", "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠",
-            "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "待", "本", "本"
-          ],
-          "外厩門 1": [
-            "", "", "", "", "座", "休", "休", "座", "立", "休", "東", "東", "座", "立", "休", "休", "立", "座", "東",
-            "東", "休", "休", "立", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座",
-            "座", "座", "巡", "巡", "座", "座", "立", "座", "立", "座", "立", "座", "立", "座", "立", "掃"
-          ],
-          "外厩門 2": [
-            "", "", "", "", "立", "座", "立", "待", "休", "休", "座", "立", "休", "休", "東", "東", "立", "座", "座",
-            "立", "東", "東", "休", "休", "座", "座", "休", "座", "座", "座", "巡", "巡", "座", "座", "座", "巡", "巡",
-            "巡", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "座", "立"
-          ],
-          "外厩門 3": [
-            "", "", "", "", "準", "立", "座", "立", "座", "立", "休", "休", "立", "座", "座", "休", "東", "東", "休",
-            "休", "座", "立", "座", "立", "東", "東", "座", "巡", "巡", "巡", "休", "座", "仮眠", "仮眠", "仮眠", "仮眠",
-            "仮眠", "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "立", "東", "東", "座", "立", "休", ""
-          ],
-          "外厩門 4": [
-            "", "", "", "", "", "", "", "休", "休", "座", "立", "座", "東", "東", "立", "座", "休", "休", "立", "座",
-            "立", "座", "東", "東", "巡", "巡", "巡", "巡", "巡", "巡", "座", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "", "", ""
-          ],
-          "西通用門 4": [
-            "", "", "", "", "準", "立", "座", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
-            "座", "座", "座", "座", "座", "座", "座", "立", "座", "立", "休", "掃"
-          ],
-          "西通用門 5": [
-            "", "", "", "", "準", "座", "休", "休", "立", "座", "立", "座", "立", "本", "休", "休", "立", "座", "立",
-            "座", "休", "休", "本", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "巡",
-            "巡", "巡", "座", "座", "座", "座", "巡", "巡", "巡", "巡", "巡", "座", "掃", "待", "立", "座"
-          ],
-          "西通用門 6": [
-            "", "", "", "", "立", "待", "本", "立", "休", "休", "座", "立", "座", "座", "立", "座", "休", "休", "座",
-            "立", "座", "立", "座", "立", "座", "座", "座", "休", "本", "座", "座", "座", "巡", "巡", "巡", "本", "本",
-            "本", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "休", "本", "座", "立"
-          ],
-          "西通用門 7": [
-            "", "", "", "", "座", "休", "立", "座", "座", "立", "休", "休", "本", "立", "座", "立", "座", "立", "休",
-            "休", "立", "座", "立", "本", "巡", "巡", "巡", "座", "座", "休", "巡", "巡", "座", "座", "座", "座", "座",
-            "座", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "立", "座", "待", "座"
-          ]
-        },
+  // =========================
+  // 土曜日（8:00〜翌10:00：52コ・0〜3は8:00〜9:30の空白）
+  // =========================
+  sat: {
+    "厩舎長": [
+      "", "", "", "", "本", "本", "休", "本", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "休",
+      "本", "本", "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠",
+      "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "待", "本", "本"
+      ],
+    "外厩門 1": [
+      "", "", "", "", "座", "休", "休", "座", "立", "休", "東", "東", "座", "立", "休", "休", "立", "座", "東",
+      "東", "休", "休", "立", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座",
+      "座", "座", "巡", "巡", "座", "座", "立", "座", "立", "座", "立", "座", "立", "座", "立", "掃"
+      ],
+    "外厩門 2": [
+      "", "", "", "", "立", "座", "立", "待", "休", "休", "座", "立", "休", "休", "東", "東", "立", "座", "座",
+      "立", "東", "東", "休", "休", "座", "座", "休", "座", "座", "座", "巡", "巡", "座", "座", "座", "巡", "巡",
+      "巡", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "座", "立"
+      ],
+    "外厩門 3": [
+      "", "", "", "", "準", "立", "座", "立", "座", "立", "休", "休", "立", "座", "座", "休", "東", "東", "休",
+      "休", "座", "立", "座", "立", "東", "東", "座", "巡", "巡", "巡", "休", "座", "仮眠", "仮眠", "仮眠", "仮眠",
+      "仮眠", "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "立", "東", "東", "座", "立", "休", ""
+      ],
+    "外厩門 4": [
+      "", "", "", "", "", "", "", "休", "休", "座", "立", "座", "東", "東", "立", "座", "休", "休", "立", "座",
+      "立", "座", "東", "東", "巡", "巡", "巡", "巡", "巡", "巡", "座", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "", "", "", "", "", "", ""
+      ],
+    "西通用門 4": [
+      "", "", "", "", "準", "立", "座", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+      "", "", "", "", "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+      "座", "座", "座", "座", "座", "座", "座", "立", "座", "立", "休", "掃"
+      ],
+    "西通用門 5": [
+      "", "", "", "", "準", "座", "休", "休", "立", "座", "立", "座", "立", "本", "休", "休", "立", "座", "立",
+      "座", "休", "休", "本", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "巡",
+      "巡", "巡", "座", "座", "座", "座", "巡", "巡", "巡", "巡", "巡", "座", "掃", "待", "立", "座"
+      ],
+    "西通用門 6": [
+      "", "", "", "", "立", "待", "本", "立", "休", "休", "座", "立", "座", "座", "立", "座", "休", "休", "座",
+      "立", "座", "立", "座", "立", "座", "座", "座", "休", "本", "座", "座", "座", "巡", "巡", "巡", "本", "本",
+      "本", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "休", "本", "座", "立"
+      ],
+    "西通用門 7": [
+      "", "", "", "", "座", "休", "立", "座", "座", "立", "休", "休", "本", "立", "座", "立", "座", "立", "休",
+      "休", "立", "座", "立", "本", "巡", "巡", "巡", "座", "座", "休", "巡", "巡", "座", "座", "座", "座", "座",
+      "座", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "立", "座", "待", "座"
+      ]
+  },
 
-        // =========================
-        // 日曜日（8:00〜20:00：25コ・0〜3は8:00〜9:30の空白）
-        // =========================
-        sun: {
-          "厩舎長": [
-            "", "", "", "", "本", "本", "待", "本", "本", "本", "休", "本", "本", "本", "本", "本", "本", "休", "本",
-            "本", "本", "本", "本", "本", "本"
-          ],
-          "外厩門 1": [
-            "", "", "", "", "立", "座", "待", "立", "座", "休", "東", "東", "東", "休", "座", "立", "休", "座", "立",
-            "座", "座", "座", "座", "座", "座"
-          ],
-          "外厩門 2": [
-            "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "立", "東", "東", "休", "座", "立", "休",
-            "東", "東", "座", "座", "東", "東"
-          ],
-          "外厩門 3": [
-            "", "", "", "", "座", "待", "立", "座", "休", "立", "座", "立", "座", "立", "休", "東", "東", "休", "座",
-            "立", "座", "東", "東", "座", "座"
-          ],
-          "外厩門 4": [
-            "", "", "", "", "", "", "", "", "", "", "", "", "休", "座", "立", "座", "立", "東", "東", "休", "",
-            "", "", "", ""
-          ],
-          "西通用門 4": [
-            "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "休", "", "", "", "", "", "", "休",
-            "座", "座", "座", "座", "座"
-          ],
-          "西通用門 5": [
-            "", "", "", "", "立", "座", "立", "座", "待", "立", "座", "休", "立", "座", "立", "座", "座", "本", "立",
-            "座", "", "", "", "", ""
-          ],
-          "西通用門 6": [
-            "", "", "", "", "座", "待", "本", "立", "座", "休", "本", "立", "座", "立", "座", "立", "休", "座", "座",
-            "立", "", "", "", "", ""
-          ]
-        }
-      };
+  // =========================
+  // 日曜日（8:00〜20:00：25コ・0〜3は8:00〜9:30の空白）
+  // =========================
+  sun: {
+    "厩舎長": [
+      "", "", "", "", "本", "本", "待", "本", "本", "本", "休", "本", "本", "本", "本", "本", "本", "休", "本",
+      "本", "本", "本", "本", "本", "本"
+      ],
+    "外厩門 1": [
+      "", "", "", "", "立", "座", "待", "立", "座", "休", "東", "東", "東", "休", "座", "立", "休", "座", "立",
+      "座", "座", "座", "座", "座", "座"
+      ],
+    "外厩門 2": [
+      "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "立", "東", "東", "休", "座", "立", "休",
+      "東", "東", "座", "座", "東", "東"
+      ],
+    "外厩門 3": [
+      "", "", "", "", "座", "待", "立", "座", "休", "立", "座", "立", "座", "立", "休", "東", "東", "休", "座",
+      "立", "座", "東", "東", "座", "座"
+      ],
+    "外厩門 4": [
+      "", "", "", "", "", "", "", "", "", "", "", "", "休", "座", "立", "座", "立", "東", "東", "休", "",
+      "", "", "", ""
+      ],
+    "西通用門 4": [
+      "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "休", "", "", "", "", "", "", "休",
+      "座", "座", "座", "座", "座"
+      ],
+    "西通用門 5": [
+      "", "", "", "", "立", "座", "立", "座", "待", "立", "座", "休", "立", "座", "立", "座", "座", "本", "立",
+      "座", "", "", "", "", ""
+      ],
+    "西通用門 6": [
+      "", "", "", "", "座", "待", "本", "立", "座", "休", "本", "立", "座", "立", "座", "立", "休", "座", "座",
+      "立", "", "", "", "", ""
+      ]
+  }
+};
 
-      // 前回のスロットインデックス
+      // 前回のスロット
       let prevSlotIndex = null;
 
       function getSlotCountForDay(day) {
@@ -919,25 +966,52 @@
       }
 
       // 名前 → 表示文字列（厩舎長だけ1人分）
+      
       function buildPlaceDisplay(day, place) {
-        const dayData = namesStore[day] || {};
-        const np = dayData[place] || {};
-        const n1 = np.n1 || "";
-        const n2 = np.n2 || "";
+        // まずはその日の通常の表示（今までどおり）
         let baseLabel;
-
         if (place === "厩舎長") {
-          const n = n1 || n2;
+          const key = `name_${day}_${place}_1`;
+          const n = LOCAL_STORE.getItem(key) || "";
           baseLabel = n ? `${n}（${place}）` : place;
         } else {
+          const key1 = `name_${day}_${place}_1`;
+          const key2 = `name_${day}_${place}_2`;
+          const n1 = LOCAL_STORE.getItem(key1) || "";
+          const n2 = LOCAL_STORE.getItem(key2) || "";
           let namePart = "";
           if (n1 && n2) namePart = `${n1}・${n2}`;
           else if (n1) namePart = n1;
           else if (n2) namePart = n2;
           baseLabel = namePart ? `${namePart}（${place}）` : place;
         }
+
+        // ★ 土曜日のロータリー情報を、土曜と金曜のラベルに反映させる
+        //   rotary_sat_◯◯ というキーで「up / down」を保存している前提
+        const rk = `rotary_sat_${place}`;
+        const rv = LOCAL_STORE.getItem(rk) || "";
+        if (rv === "up" || rv === "down") {
+          // 土曜側の名前（ロータリー担当者）
+          const s1 = LOCAL_STORE.getItem(`name_sat_${place}_1`) || "";
+          const s2 = LOCAL_STORE.getItem(`name_sat_${place}_2`) || "";
+          let satName = "";
+          if (s1 && s2) satName = `${s1}・${s2}`;
+          else if (s1) satName = s1;
+          else if (s2) satName = s2;
+
+          const tail = (rv === "up") ? "ロータリー↑ 8:00〜" : "ロータリー↓ 8:30〜";
+
+          // 配置名のところにはロータリー情報を追記しない
+          if (day === "sat") {
+            // 土曜の表でも「◯◯（西通用門4）」のみ表示（「ロータリー↑ 8:00〜」などは表示しない）
+          } else if (day === "fri") {
+            // 金曜の表でも「土ロータリー: SatName ロータリー↑ 8:00〜」などは表示しない
+          }
+        }
+
         return baseLabel;
       }
+
 
       function syncPlaceHeaderForDay(day) {
         const table = document.querySelector(`table.place-table[data-day="${day}"]`);
@@ -955,9 +1029,65 @@
         ["fri","sat","sun"].forEach(syncPlaceHeaderForDay);
       }
 
-      // 名前パネルは現在使わない（見た目維持のため空実装）
       function buildNamePanels() {
-        // names-wrapper は非表示のため、今は何もしない
+        const panels = document.querySelectorAll(".names-panel");
+        panels.forEach(panel => {
+          const day = panel.dataset.day;
+          panel.innerHTML = "";
+          PLACES.forEach(place => {
+            const line = document.createElement("div");
+            line.className = "name-line";
+            line.dataset.place = place;
+
+            const label = document.createElement("span");
+            label.className = "name-line-label";
+            label.textContent = place;
+            line.appendChild(label);
+
+            const isSingle = (place === "厩舎長");
+
+            if (isSingle) {
+              // 厩舎長だけ1人分
+              const input = document.createElement("input");
+              input.placeholder = "名前";
+              const key = `name_${day}_${place}_1`;
+              input.value = LOCAL_STORE.getItem(key) || "";
+              input.addEventListener("input", () => {
+                LOCAL_STORE.setItem(key, input.value);
+                syncPlaceHeaderForDay(day);
+                syncRowHeightsForDay(day);
+              });
+              line.appendChild(input);
+            } else {
+              // 通常2人分
+              const input1 = document.createElement("input");
+              input1.placeholder = "名前1";
+              const input2 = document.createElement("input");
+              input2.placeholder = "名前2";
+
+              const key1 = `name_${day}_${place}_1`;
+              const key2 = `name_${day}_${place}_2`;
+              input1.value = LOCAL_STORE.getItem(key1) || "";
+              input2.value = LOCAL_STORE.getItem(key2) || "";
+
+              input1.addEventListener("input", () => {
+                LOCAL_STORE.setItem(key1, input1.value);
+                syncPlaceHeaderForDay(day);
+                syncRowHeightsForDay(day);
+              });
+              input2.addEventListener("input", () => {
+                LOCAL_STORE.setItem(key2, input2.value);
+                syncPlaceHeaderForDay(day);
+                syncRowHeightsForDay(day);
+              });
+
+              line.appendChild(input1);
+              line.appendChild(input2);
+            }
+
+            panel.appendChild(line);
+          });
+        });
       }
 
       function applyStateClass(td, value) {
@@ -972,20 +1102,28 @@
         }
       }
 
+
       // ★ ロータリー関連ユーティリティ
+      // 土日ともロータリー対象スロットは「その日の朝8:00〜」なので、
+      // 実際にロ↑/ロ↓を書き込むのは、その日のテーブルの 8:00〜9:00（slot 0〜2）
       function getRotaryTarget(day) {
-        // 土日とも自日付テーブルに書き込む
+        if (day === "sat" || day === "sun") {
+          // ロータリーは当日のテーブル(8:00〜10:00)に直接書き込む
+          return { targetDay: day };
+        }
         return { targetDay: day };
       }
 
+      // バックアップ対象スロット（targetDay 側の index）
       function getRotaryBaseSlots(day) {
-        // 8:00,8:30,9:00 → slot 0〜2 をロータリー用として使用
         if (day === "sat" || day === "sun") {
+          // 土日テーブル: 0=8:00, 1=8:30, 2=9:00
           return [0, 1, 2];
         }
         return [];
       }
 
+      // ロータリー種別ごとの対象スロットと表示文字
       function getRotarySetting(day, type) {
         if (day === "sat" || day === "sun") {
           if (type === "up") {
@@ -1000,10 +1138,19 @@
         return { slots: [], mark: "" };
       }
 
-      // ロータリーの選択を適用（up / down / 解除）
-      function applyRotarySelection(day, place, value, fromRemote) {
-        const baseSlots = getRotaryBaseSlots(day);
-        if (!baseSlots.length) return;
+      // 以前のロータリー状態を元に戻す
+      function restoreOriginalCells(day, place) {
+        const backupKey = `rotary_backup_${day}_${place}`;
+        const raw = LOCAL_STORE.getItem(backupKey);
+        if (!raw) return;
+
+        let data;
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          data = null;
+        }
+        if (!data) return;
 
         const target = getRotaryTarget(day);
         const table = document.querySelector(`table.schedule-table[data-day="${target.targetDay}"]`);
@@ -1011,23 +1158,50 @@
         const tr = table.querySelector(`tbody tr[data-place="${place}"]`);
         if (!tr) return;
 
-        // まず 8:00〜9:00 の3枠をリセット
+        Object.keys(data).forEach(slotStr => {
+          const td = tr.querySelector(`td[data-slot="${slotStr}"]`);
+          if (!td) return;
+          const v = data[slotStr] || "";
+          td.textContent = v;
+          applyStateClass(td, v);
+          const cellKey = `cell_${target.targetDay}_${place}_${slotStr}`;
+          if (v) {
+            LOCAL_STORE.setItem(cellKey, v);
+          } else {
+            LOCAL_STORE.removeItem(cellKey);
+          }
+        });
+
+        LOCAL_STORE.removeItem(backupKey);
+      }
+
+      // ロータリーの選択を適用（up / down / 解除）
+      function applyRotarySelection(day, place, value) {
+        const baseSlots = getRotaryBaseSlots(day);
+        if (!baseSlots.length) return;
+
+        // まず前回のロータリーを元に戻す
+        restoreOriginalCells(day, place);
+
+        // 解除ならここで終了
+        if (value !== "up" && value !== "down") {
+          return;
+        }
+
+        const target = getRotaryTarget(day);
+        const table = document.querySelector(`table.schedule-table[data-day="${target.targetDay}"]`);
+        if (!table) return;
+        const tr = table.querySelector(`tbody tr[data-place="${place}"]`);
+        if (!tr) return;
+
+        // 元の値をバックアップ（8:00 / 8:30 / 9:00 の3枠）
+        const backup = {};
         baseSlots.forEach(slotIdx => {
           const td = tr.querySelector(`td[data-slot="${slotIdx}"]`);
           if (!td) return;
-          td.textContent = "";
-          applyStateClass(td, "");
+          backup[slotIdx] = td.textContent.trim();
         });
-
-        // 解除ならここで終了＋Firestore更新
-        if (value !== "up" && value !== "down") {
-          if (!fromRemote) {
-            if (!remoteConfig.rotary[day]) remoteConfig.rotary[day] = {};
-            delete remoteConfig.rotary[day][place];
-            saveRemoteConfig({ rotary: remoteConfig.rotary });
-          }
-          return;
-        }
+        LOCAL_STORE.setItem(`rotary_backup_${day}_${place}`, JSON.stringify(backup));
 
         // 新しいロータリー設定を反映
         const cfg = getRotarySetting(day, value);
@@ -1038,31 +1212,12 @@
           if (!td) return;
           td.textContent = mark;
           applyStateClass(td, mark);
-        });
-
-        if (!fromRemote) {
-          if (!remoteConfig.rotary[day]) remoteConfig.rotary[day] = {};
-          remoteConfig.rotary[day][place] = value;
-          saveRemoteConfig({ rotary: remoteConfig.rotary });
-        }
-      }
-
-      // Firestore に保存されているロータリー設定を一括適用
-      function applyAllRotaryFromRemote() {
-        if (!remoteConfig.rotary) return;
-        ["sat","sun"].forEach(day => {
-          const dayRot = remoteConfig.rotary[day];
-          if (!dayRot) return;
-          Object.keys(dayRot).forEach(place => {
-            const t = dayRot[place];
-            if (t === "up" || t === "down") {
-              applyRotarySelection(day, place, t, true);
-            }
-          });
+          const cellKey = `cell_${target.targetDay}_${place}_${slotIdx}`;
+          LOCAL_STORE.setItem(cellKey, mark);
         });
       }
 
-      // ロータリー設定用の小さなメニューを開く（土日共通）
+      // ロータリー設定用の小さなメニューを開く（今回は土曜のみ）
       function openRotaryMenu(day, place, anchorEl) {
         // 既存メニューがあれば消す
         const old = document.getElementById("rotaryMenu");
@@ -1098,8 +1253,8 @@
         optDown.textContent = "ロータリー（↓）8:30〜";
         select.appendChild(optDown);
 
-        const saved = (remoteConfig.rotary[day] && remoteConfig.rotary[day][place]) || "";
-        select.value = saved;
+        const key = `rotary_${day}_${place}`;
+        select.value = LOCAL_STORE.getItem(key) || "";
 
         menu.appendChild(select);
         document.body.appendChild(menu);
@@ -1117,7 +1272,12 @@
 
         select.addEventListener("change", () => {
           const value = select.value;
-          applyRotarySelection(day, place, value, false);
+          applyRotarySelection(day, place, value);
+          if (value) {
+            LOCAL_STORE.setItem(key, value);
+          } else {
+            LOCAL_STORE.removeItem(key);
+          }
           // ロータリー設定変更後に、各日のヘッダーを更新
           syncPlaceHeaderForDay("sat");
           syncPlaceHeaderForDay("fri");
@@ -1138,7 +1298,7 @@
         }, 0);
       }
 
-      // 「配置＋名前」セルクリックでロータリーメニューを開く（土日）
+      // 「配置＋名前」セルクリックでロータリーメニューを開く（土日共通）
       function setupRotaryClickHandlers() {
         ["sat","sun"].forEach(day => {
           const placeTable = document.querySelector(`table.place-table[data-day="${day}"]`);
@@ -1159,9 +1319,31 @@
         });
       }
 
-      // セルクリック編集は無効化（何もしない）
-      function attachCellHandlers() {
-        return;
+      function saveCell(td) {
+        const day = td.closest("table.schedule-table").dataset.day;
+        const place = td.parentElement.dataset.place || "";
+        const slot = td.dataset.slot || "";
+        const key = `cell_${day}_${place}_${slot}`;
+        const value = td.textContent.trim();
+        LOCAL_STORE.setItem(key, value);
+      }
+
+      function loadCellsFromStorage() {
+        document.querySelectorAll("table.schedule-table").forEach(table => {
+          const day = table.dataset.day;
+          table.querySelectorAll("tbody tr").forEach(tr => {
+            const place = tr.dataset.place || "";
+            tr.querySelectorAll("td[data-slot]").forEach(td => {
+              const slot = td.dataset.slot || "";
+              const key = `cell_${day}_${place}_${slot}`;
+              const value = LOCAL_STORE.getItem(key);
+              if (value !== null) {
+                td.textContent = value;
+                applyStateClass(td, value);
+              }
+            });
+          });
+        });
       }
 
       // ===== 配置テーブルとタイムテーブルの行高さを揃える =====
@@ -1208,6 +1390,51 @@
         });
       }
 
+      function handleCellClick(e){
+        const td = e.currentTarget;
+        if (!td.dataset.slot) return;
+        if (td.querySelector("select")) return;
+
+        const currentVal = td.textContent.trim();
+        const select = document.createElement("select");
+
+        const emptyOpt = document.createElement("option");
+        emptyOpt.value = "";
+        emptyOpt.textContent = "";
+        select.appendChild(emptyOpt);
+
+        STATES.slice(1).forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s;
+          opt.textContent = s;
+          select.appendChild(opt);
+        });
+
+        select.value = currentVal;
+        td.textContent = "";
+        td.appendChild(select);
+        select.focus();
+
+        function commit(){
+          const v = select.value;
+          td.removeChild(select);
+          td.textContent = v;
+          applyStateClass(td, v);
+          saveCell(td);
+
+          // セル編集後、その日の行高さを再同期
+          const day = td.closest("table.schedule-table").dataset.day;
+          syncRowHeightsForDay(day);
+        }
+        select.addEventListener("change", commit);
+        select.addEventListener("blur", commit);
+      }
+
+      function attachCellHandlers() {
+        // セルクリックによる直接編集は無効化（ハンドラを付けない）
+        return;
+      }
+
       // 現在時刻 → スロットindex
       function getCurrentSlotIndex(date, day) {
         const totalMin = date.getHours() * 60 + date.getMinutes();
@@ -1217,7 +1444,7 @@
           // 金曜は 9:30 スタート
           startMin = 9 * 60 + 30;
         } else if (day === "sat" || day === "sun") {
-          // 土日はいずれも 8:00 スタート
+          // 土日はいずれも 8:00 スタート（ただし 8:00〜10:00 はロータリー用で初期データは空欄）
           startMin = 8 * 60;
         } else {
           startMin = 0;
@@ -1238,7 +1465,7 @@
       function scrollToNowColumn(smooth) {
         if (!daySelect) return;
         let activeDay = daySelect.value;
-        // daySelect は YYYY-MM-DD（日付）を持つので、曜日キーに変換
+        // daySelectはYYYY-MM-DD（日付）なので、表示中の曜日キーに変換
         if (activeDay && activeDay.includes("-")) {
           const d = new Date(activeDay + "T00:00:00");
           if (!isNaN(d.getTime())) {
@@ -1255,13 +1482,17 @@
         const table = wrapper.querySelector("table.schedule-table");
         if (!container || !table) return;
 
+        // ヘッダー側に now-col が付いていればそちら優先
         const target =
           table.querySelector("thead th.now-col") ||
           table.querySelector("tbody td.now-col");
         if (!target) return;
 
+        // スクロールコンテンツ内での left 位置
         const targetLeft = target.offsetLeft;
-        const margin = 0;
+
+        // 配置のすぐ横に来るように、ほぼぴったり左端に合わせる
+        const margin = 0; // 配置との間のちょっとした余白
 
         let desired = targetLeft - margin;
         if (desired < 0) desired = 0;
@@ -1275,9 +1506,11 @@
         });
       }
 
+
       function updateNowColumn(fromTimer) {
         const now = new Date();
         let activeDay = daySelect.value;
+        // daySelectはYYYY-MM-DD（日付）を持っているので、曜日からfri/sat/sunを求める
         if (activeDay && activeDay.includes("-")) {
           const d = new Date(activeDay + "T00:00:00");
           if (!isNaN(d.getTime())) {
@@ -1319,9 +1552,11 @@
         });
         prevSlotIndex = null;
         updateNowColumn(false);
+        // 切り替えた日の行高さも同期
         syncRowHeightsForDay(day);
       }
 
+      
       // ===== 月間シフト（金・土・日） =====
       function getActiveMonthStr() {
         if (!monthPicker) return "";
@@ -1361,6 +1596,7 @@
         return dates;
       }
 
+
       // 日付プルダウン(daySelect)を、対象月の金土日フル一覧に差し替える
       function rebuildDaySelectForActiveMonth() {
         if (!daySelect) return;
@@ -1388,82 +1624,6 @@
         applySelectedDateToSchedule();
       }
 
-      // 指定した日付(YYYY-MM-DD)・曜日キー(fri/sat/sun)に対して、
-      // 月間シフトの内容から「配置者の名前」を namesStore に書き込む
-      function applyMonthShiftToSchedule(dateStr, dayKey) {
-        const rows = loadMonthShiftData();
-        if (!rows || !rows.length) return;
-
-        const dateInfos = getFriSatSunDatesForActiveMonth();
-        const targetInfo = dateInfos.find(info => info.dateStr === dateStr);
-        if (!targetInfo) {
-          return;
-        }
-
-        // 場所一覧（0:厩舎長, 1以降が他の場所）
-        const allPlaces = PLACES.slice();
-        const otherPlaces = allPlaces.filter(p => p !== "厩舎長");
-
-        // namesStore の初期化
-        if (!namesStore[dayKey]) namesStore[dayKey] = {};
-        allPlaces.forEach(place => {
-          if (dayKey === "sun" && place === "西通用門 7") return;
-          namesStore[dayKey][place] = { n1: "", n2: "" };
-        });
-
-        const placeToNames = {};
-
-        // 各行のコードを読み取り、placeToNames に詰める
-        const dateStrs = dateInfos.map(d => d.dateStr);
-
-        rows.forEach(row => {
-          const rawName = (row.name || "").trim();
-          if (!rawName) return;
-          const asg = row.assignments || {};
-          const code = asg[dateStr];
-          if (!code) return;
-
-          if (code === "O" || code === "X") {
-            const place = "厩舎長";
-            if (!placeToNames[place]) placeToNames[place] = [];
-            placeToNames[place].push(rawName);
-            return;
-          }
-
-          const m = code.match(/^([OXY])(\d)$/);
-          if (!m) return;
-          const num = parseInt(m[2], 10); // 1〜7
-          if (!(num >= 1 && num <= 7)) return;
-          const idx = num - 1;
-
-          if (idx < 0 || idx >= otherPlaces.length) return;
-          const place = otherPlaces[idx];
-          if (!place) return;
-
-          if (!placeToNames[place]) placeToNames[place] = [];
-          placeToNames[place].push(rawName);
-        });
-
-        // placeToNames → namesStore に反映（最大2人まで）
-        Object.keys(placeToNames).forEach(place => {
-          const arr = placeToNames[place];
-          if (!arr || !arr.length) return;
-          const n1 = arr[0];
-          const n2 = arr[1];
-
-          if (!namesStore[dayKey]) namesStore[dayKey] = {};
-          if (place === "厩舎長") {
-            namesStore[dayKey][place] = { n1, n2: "" };
-          } else {
-            namesStore[dayKey][place] = { n1, n2: n2 || "" };
-          }
-        });
-
-        // 表示更新
-        syncPlaceHeaderForDay(dayKey);
-        syncRowHeightsForDay(dayKey);
-      }
-
       // daySelectで選ばれている日付に応じて、表示するシフト(曜日)を切り替える
       function applySelectedDateToSchedule() {
         if (!daySelect || !daySelect.value) return;
@@ -1473,24 +1633,32 @@
         const dow = d.getDay(); // 0〜6
         const dayKey = (dow === 5 ? "fri" : dow === 6 ? "sat" : dow === 0 ? "sun" : null);
         if (!dayKey) return;
-
-        // 月間シフトから、この日付の配置者を各場所に反映
-        applyMonthShiftToSchedule(dateStr, dayKey);
-
-        // 対象日の表示を切り替え
         setActiveDay(dayKey);
       }
-
       function loadMonthShiftData() {
-        return currentMonthRows || [];
+        if (!monthPicker) return [];
+        const ym = getActiveMonthStr();
+        const key = `monthshift_${ym}`;
+        try {
+          const raw = LOCAL_STORE.getItem(key);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed;
+        } catch (e) {
+          console.warn("月間シフトの読み込みに失敗しました", e);
+          return [];
+        }
       }
 
       function saveMonthShiftTable() {
         if (!monthPicker || !msBody) return;
         const ym = getActiveMonthStr();
+        const key = `monthshift_${ym}`;
+
+        const rows = [];
         const dateInfos = getFriSatSunDatesForActiveMonth();
         const dateStrs = dateInfos.map(d => d.dateStr);
-        const rows = [];
 
         msBody.querySelectorAll("tr").forEach(tr => {
           const nameInput = tr.querySelector("td.month-shift-name input");
@@ -1507,11 +1675,11 @@
           rows.push({ name, assignments });
         });
 
-        currentMonthStr = ym;
-        currentMonthRows = rows;
-        if (!remoteConfig.monthShifts) remoteConfig.monthShifts = {};
-        remoteConfig.monthShifts[ym] = rows;
-        saveRemoteConfig({ monthShifts: remoteConfig.monthShifts });
+        try {
+          LOCAL_STORE.setItem(key, JSON.stringify(rows));
+        } catch (e) {
+          console.warn("月間シフトの保存に失敗しました", e);
+        }
       }
 
       function appendMonthShiftRow(rowData, dateInfos) {
@@ -1590,16 +1758,28 @@
           rows.forEach(row => appendMonthShiftRow(row, dateInfos));
         }
       }
+      // 旧バージョンで保存されていたセル編集データ(cell_*)は一度クリア（ロータリーは再設定前提）
+      (function clearLegacyCellData(){
+        const removeKeys = [];
+        for (let i = 0; i < LOCAL_STORE.length; i++) {
+          const key = LOCAL_STORE.key(i);
+          if (key && key.startsWith("cell_")) {
+            removeKeys.push(key);
+          }
+        }
+        removeKeys.forEach(k => LOCAL_STORE.removeItem(k));
+      })();
 
-      document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
         buildPlaceTableBodies();
         buildScheduleBodies();
         buildNamePanels();
         attachCellHandlers();
+        loadCellsFromStorage();
         syncAllPlaceHeaders();
-        normalizeTimeHeaders();
-        syncAllRowHeights();
-        setupRotaryClickHandlers();
+        normalizeTimeHeaders();     // ★ 時刻表示を01:00形式にそろえる
+        syncAllRowHeights();        // 全日の行高さを揃える
+        setupRotaryClickHandlers(); // 土曜ロータリー（前日8:00〜）
 
         if (editToggle) {
           editToggle.addEventListener("change", () => {
@@ -1613,6 +1793,7 @@
           });
         }
 
+        // 月間シフト初期化
         if (monthPicker) {
           if (!monthPicker.value) {
             const now = new Date();
@@ -1620,13 +1801,10 @@
             monthPicker.value = `${now.getFullYear()}-${m}`;
           }
           monthPicker.addEventListener("change", () => {
-            currentMonthStr = getActiveMonthStr();
-            currentMonthRows = (remoteConfig.monthShifts && remoteConfig.monthShifts[currentMonthStr]) || [];
             renderMonthShiftTable();
             rebuildDaySelectForActiveMonth();
           });
         }
-
         if (msAddPerson) {
           msAddPerson.addEventListener("click", () => {
             const infos = getFriSatSunDatesForActiveMonth();
@@ -1634,60 +1812,27 @@
             saveMonthShiftTable();
           });
         }
-
         if (msApplyButton) {
           msApplyButton.addEventListener("click", () => {
             saveMonthShiftTable();
-            if (daySelect && daySelect.value) {
-              applySelectedDateToSchedule();
-            }
             alert("月間シフトを保存しました。");
           });
         }
-
-        // Firestore から設定読み込み
-        await loadRemoteConfig();
-
-        if (monthPicker) {
-          currentMonthStr = getActiveMonthStr();
-          currentMonthRows = (remoteConfig.monthShifts && remoteConfig.monthShifts[currentMonthStr]) || [];
-        }
-
         renderMonthShiftTable();
-        rebuildDaySelectForActiveMonth();
-        applyAllRotaryFromRemote();
 
+        // 日付プルダウンを対象月の金土日で構成
+        rebuildDaySelectForActiveMonth();
+
+        // 初期表示（今日が金土日のいずれかなら自動でその日を選択）
         updateNowColumn(false);
         setInterval(() => updateNowColumn(true), 60000);
 
+        // 画面サイズ変更時も行高さを再計算
         window.addEventListener("resize", () => {
           syncAllRowHeights();
         });
       });
     })();
   </script>
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCNUZdZeE9t6EFg9tDhSVF2qPcgiyPlrUs",
-    authDomain: "cktaizai-c197d.firebaseapp.com",
-    projectId: "cktaizai-c197d",
-    storageBucket: "cktaizai-c197d.firebasestorage.app",
-    messagingSenderId: "434618441616",
-    appId: "1:434618441616:web:dd87d2d1f9385b697a9d15",
-    measurementId: "G-1BZNEGWFZE"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 </body>
 </html>
