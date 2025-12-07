@@ -2,481 +2,648 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>立座表＋月間シフト（Firestore版）</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Firebase v8（global 名前空間で firebase.firestore() を使う） -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script>
-    // TODO: 自分の Firebase プロジェクトの設定に差し替え
-    var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
-    window.db = firebase.firestore();
-  </script>
-
+  <title>中京競馬場 滞在場所特別警備 立座表（新レイアウト）</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body {
-      margin: 8px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, "YuGothic", "Yu Gothic", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
       color: #333;
-      box-sizing: border-box;
     }
-    *, *::before, *::after { box-sizing: inherit; }
-
-    h1 {
-      font-size: 20px;
-      margin: 4px 0 8px;
+    .wrapper {
+      padding: 12px;
     }
-
-    .top-controls {
+    .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 16px;
+      gap: 12px;
       align-items: center;
       margin-bottom: 8px;
-    }
-    .top-controls label {
       font-size: 14px;
-      white-space: nowrap;
+    }
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    select, input[type="checkbox"] {
+      font-size: 14px;
     }
     #currentTime {
-      font-weight: bold;
-      color: #d35400;
+      margin-left: auto;
+      font-weight: 600;
     }
 
-    .days-container {
-      margin-top: 8px;
-    }
-
+    /* ===== レイアウト全体（1日分） ===== */
     .day-wrapper {
+      margin-top: 8px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      padding: 8px;
+      max-height: 70vh;
+      overflow: auto;          /* 縦スクロールは1日ごと */
       display: none;
-      margin-bottom: 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 4px;
-      background: #fafafa;
     }
     .day-wrapper.active {
       display: block;
     }
 
     .day-title {
-      font-weight: bold;
-      margin-bottom: 4px;
-      font-size: 15px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      padding: 4px 6px;
+      background: #2b5fb8;
+      color: #fff;
+      border-radius: 4px;
     }
 
-    .day-inner {
+    .schedule-main {
       display: flex;
-      align-items: stretch;
+      align-items: flex-start;
       gap: 4px;
     }
 
-    .place-container {
-      flex: 0 0 150px;
-    }
-    .table-container {
-      flex: 1 1 auto;
-      overflow-x: auto;
-      overflow-y: hidden;
-      border-left: 1px solid #ddd;
+    .fixed-col {
+      flex: 0 0 150px;  /* 左の配置カラムは固定幅 */
     }
 
+    .scroll-col {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .table-container {
+      position: relative;
+      overflow-x: auto;   /* 横スクロールはここだけ */
+      overflow-y: hidden; /* 縦スクロールは day-wrapper に任せる */
+    }
+
+    /* ===== テーブル共通 ===== */
     table {
       border-collapse: collapse;
-      border-spacing: 0;
-      font-size: 12px;
       table-layout: fixed;
+      font-size: 12px;
     }
-
-    .place-table th,
-    .place-table td,
-    .schedule-table th,
-    .schedule-table td {
-      border: 1px solid #ddd;
-      padding: 2px 4px;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 3px 4px;
       text-align: center;
       white-space: nowrap;
     }
 
-    .place-table {
+    /* 左側：配置のみのテーブル */
+    table.place-table {
       width: 100%;
     }
-
-    .place-cell {
-      background: #f5f5f5;
+    .place-head {
+      background: #f0f3f8;
+      font-size: 13px;
+      text-align: left;
+    }
+    th.place-cell {
+      background: #fafafa;
+      text-align: left;
+      line-height: 1.3;
+      height: 3em;
+      white-space: normal; /* 名前＋（配置）で2行OK */
       font-weight: 600;
-      font-size: 12px;
     }
 
-    .schedule-table {
+    /* 右側：時間スロットのテーブル */
+    table.schedule-table {
       min-width: 1200px;
     }
 
     .schedule-table thead th {
-      background: #f0f0f0;
+      background: #f0f3f8;
       position: sticky;
       top: 0;
-      z-index: 2;
-      font-weight: 500;
+      z-index: 5;
+    }
+    .schedule-table thead th.time-head {
+      font-size: 12px;
     }
 
-    .slot-cell {
+    td.slot-cell {
       background: #fff;
     }
-    .slot-cell.empty {
+    td.empty {
       background: #fff;
     }
 
-    /* 状態ごとの色（お好みで調整してOK） */
-    .state-本 { background: #e3f2fd; }
-    .state-立 { background: #ffe0b2; }
-    .state-座 { background: #fff9c4; }
-    .state-巡 { background: #e8f5e9; }
-    .state-東 { background: #f3e5f5; }
-    .state-仮眠 { background: #ffe4e1; }
-    .state-休 { background: #eeeeee; color: #555; }
-    .state-掃 { background: #d7ccc8; }
-    .state-待 { background: #f0f4c3; }
-    .state-準 { background: #c5cae9; }
-    .state-ロ↑,
-    .state-ロ↓ {
-      background: #ffecb3;
-      font-weight: bold;
-      color: #d35400;
+    /* 状態ごとの色 */
+    td.state-本 { background: #fff; }
+    td.state-立 { background: #fff; }
+    td.state-座 { background: #fff; }
+    td.state-巡 { background: #d8ffd8; }
+    td.state-東 { background: #d8e8ff; }
+    td.state-仮眠 { background: #e6e6e6; }
+    td.state-休 { background: #f9d8d8; }
+    td.state-掃 { background: #d8f9ed; }
+    td.state-待 { background: #f0e0ff; }
+    td.state-準 { background: #e0f0ff; }
+    /* ロータリー用（薄い黄色） */
+    td.state-ロ↑,
+    td.state-ロ↓ { background: #fffbe6; }
+
+    /* ロータリー設定用の小さなポップアップ */
+    .rotary-menu {
+      position: fixed;
+      z-index: 2000;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      font-size: 12px;
+      max-width: 200px;
+    }
+    .rotary-menu-title {
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: #555;
+      white-space: nowrap;
+    }
+    .rotary-menu select {
+      font-size: 12px;
+      width: 100%;
     }
 
-    /* 現在時刻のスロット */
+    /* 現在時刻の30分枠 */
     .now-col {
-      outline: 2px solid #ff9800;
-      outline-offset: -1px;
-      background: #fff3e0 !important;
+      box-shadow: inset 0 0 0 2px #ff5722;
+      background-image: linear-gradient(to bottom, rgba(255,87,34,0.12), rgba(255,87,34,0.02));
+    }
+    .schedule-table thead th.now-col {
+      background: #ff5722;
+      color: #fff;
     }
 
-    /* 名前入力パネル */
+    /* セル編集は無効化（閲覧専用） */
+    td[data-slot] {
+      cursor: default;
+    }
+    body.month-editing td[data-slot] {
+      outline: none;
+    }
+
+    .legend {
+      margin-top: 6px;
+      font-size: 11px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .legend-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+    }
+    .legend-box.state-本 { background: #d8f0ff; }
+    .legend-box.state-立 { background: #ffe0d8; }
+    .legend-box.state-座 { background: #e9ffd8; }
+    .legend-box.state-巡 { background: #fff6cc; }
+    .legend-box.state-東 { background: #f5d8ff; }
+    .legend-box.state-仮眠 { background: #e6e6e6; }
+    .legend-box.state-休 { background: #f9d8d8; }
+    .legend-box.state-掃 { background: #d8f9ed; }
+    .legend-box.state-待 { background: #f0e0ff; }
+    .legend-box.state-準 { background: #e0f0ff; }
+
+    /* 名前欄 */
+    .names-wrapper {
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      padding: 8px;
+      font-size: 12px;
+    }
     .names-panel {
       display: none;
-      margin-top: 6px;
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px dashed #ccc;
-      background: #fcfcfc;
     }
     .names-panel.active {
       display: block;
     }
     .name-line {
       display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
       align-items: center;
-      gap: 4px;
       margin-bottom: 4px;
     }
     .name-line-label {
-      width: 100px;
-      font-size: 12px;
-      color: #555;
-      flex-shrink: 0;
+      min-width: 80px;
+      font-weight: 600;
     }
     .name-line input {
-      flex: 1 1 auto;
-      min-width: 0;
+      font-size: 12px;
       padding: 2px 4px;
+      width: 120px;
+    }
+
+    /* ★ 配置ヘッダーと時間ヘッダーの高さを揃える */
+    .place-head,
+    .schedule-table thead th.time-head {
+      height: 40px;        /* 好きな値でOK。32〜44ぐらいで調整 */
+      line-height: 40px;   /* 縦位置も中央寄せ */
+      box-sizing: border-box;
+    }
+
+    /* 月間シフト編集エリア */
+    .month-shift-editor {
+      margin-top: 12px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      padding: 8px;
       font-size: 12px;
+      display: none; /* 編集モードのときだけ表示 */
     }
-
-    /* 月間シフトテーブル */
-    .month-shift-container {
-      margin-top: 16px;
-      padding-top: 8px;
-      border-top: 1px solid #ddd;
+    body.month-editing .month-shift-editor {
+      display: block;
     }
-
-    .month-shift-header-row {
+    .month-shift-header {
       display: flex;
-      gap: 8px;
       align-items: center;
-      margin-bottom: 4px;
-      flex-wrap: wrap;
-    }
-
-    .month-shift-header-row label {
-      font-size: 14px;
-    }
-
-    .month-shift-buttons {
-      display: flex;
       gap: 8px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .month-shift-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
       flex-wrap: wrap;
     }
-
-    .month-shift-buttons button {
-      padding: 4px 8px;
-      font-size: 12px;
-      cursor: pointer;
+    .month-shift-controls label {
+      font-size: 11px;
     }
-
     .month-shift-table {
       width: 100%;
-      margin-top: 4px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 11px;
     }
-
     .month-shift-table th,
     .month-shift-table td {
       border: 1px solid #ddd;
-      padding: 2px 4px;
-      font-size: 11px;
+      padding: 2px;
       text-align: center;
+      white-space: nowrap;
     }
-
     .month-shift-name {
-      width: 120px;
-      min-width: 100px;
-      background: #fafafa;
+      min-width: 90px;
+      text-align: left;
+      padding-left: 4px;
     }
     .month-shift-name input {
       width: 100%;
-      border: none;
-      background: transparent;
-      padding: 2px 4px;
-      font-size: 12px;
+      box-sizing: border-box;
+      font-size: 11px;
     }
-    .month-shift-name input:focus {
-      outline: 1px solid #42a5f5;
-      background: #fff;
-    }
-
     .month-shift-table select {
       width: 100%;
+      box-sizing: border-box;
       font-size: 11px;
-      padding: 1px 2px;
+    }
+    .month-shift-hint {
+      margin-top: 4px;
+      font-size: 10px;
+      color: #666;
     }
 
-    /* ロータリーメニュー */
-    .rotary-menu {
-      position: absolute;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      z-index: 1000;
-      min-width: 220px;
-      font-size: 12px;
-    }
-    .rotary-menu-title {
-      font-weight: bold;
-      margin-bottom: 4px;
-      font-size: 12px;
-    }
-    .rotary-menu select {
-      width: 100%;
-      font-size: 12px;
-      padding: 2px 4px;
+    /* 配置者の手入力欄は現在は使用しないので非表示 */
+    .names-wrapper {
+      display: none !important;
     }
 
-    /* 編集モードの見た目（ロータリー設定できる場所を分かりやすく） */
-    body.month-editing table.place-table[data-day="sat"] .place-cell,
-    body.month-editing table.place-table[data-day="sun"] .place-cell {
-      cursor: pointer;
-      background: #fff3e0;
-    }
-    body.month-editing table.place-table[data-day="sat"] .place-cell:hover,
-    body.month-editing table.place-table[data-day="sun"] .place-cell:hover {
-      background: #ffe0b2;
+    @media (max-width: 768px) {
+      .wrapper {
+        padding: 8px;
+      }
+      table.schedule-table {
+        min-width: 900px;
+      }
+      .fixed-col {
+        flex-basis: 130px;
+      }
     }
   </style>
+
+  <!-- Firebase (Firestore) 用スクリプト -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCy6HHiGMsaXMCVkftoIlZIyJdp3YM7DsI",
+      authDomain: "todo-f9789.firebaseapp.com",
+      projectId: "todo-f9789",
+      storageBucket: "todo-f9789.firebasestorage.app",
+      messagingSenderId: "104760372026",
+      appId: "1:104760372026:web:f0e0a36f33602ae5f57e03",
+      measurementId: "G-P8M48P4LTT"
+    };
+    firebase.initializeApp(firebaseConfig);
+    window.db = firebase.firestore();
+  </script>
 </head>
 <body>
-
-  <h1>立座表（Firestore共有版）</h1>
-
-  <div class="top-controls">
-    <label>
-      表示日：
-      <select id="daySelect"></select>
-    </label>
-
-    <span id="currentTime">現在時刻 --:--</span>
-
-    <label>
-      <input type="checkbox" id="editToggle">
-      月間シフト編集モード（ロータリー設定ON）
-    </label>
-  </div>
-
-  <!-- 各日の立座表 -->
-  <div class="days-container">
-
-    <!-- 金曜日 -->
-    <div class="day-wrapper active" data-day="fri">
-      <div class="day-title">金曜日</div>
-      <div class="day-inner">
-        <div class="place-container">
-          <table class="place-table" data-day="fri">
-            <tbody>
-              <!-- JS で行が生成される -->
-            </tbody>
-          </table>
-        </div>
-        <div class="table-container">
-          <table class="schedule-table" data-day="fri">
-            <thead>
-              <tr>
-                <!-- JSで時間ヘッダ生成 -->
-              </tr>
-            </thead>
-            <tbody>
-              <!-- JS でセルが生成される -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 土曜日 -->
-    <div class="day-wrapper" data-day="sat">
-      <div class="day-title">土曜日（8:00〜翌10:00）</div>
-      <div class="day-inner">
-        <div class="place-container">
-          <table class="place-table" data-day="sat">
-            <tbody>
-              <!-- JS で行が生成される -->
-            </tbody>
-          </table>
-        </div>
-        <div class="table-container">
-          <table class="schedule-table" data-day="sat">
-            <thead>
-              <tr>
-                <!-- JSで時間ヘッダ生成 -->
-              </tr>
-            </thead>
-            <tbody>
-              <!-- JS でセルが生成される -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 日曜日 -->
-    <div class="day-wrapper" data-day="sun">
-      <div class="day-title">日曜日（8:00〜）</div>
-      <div class="day-inner">
-        <div class="place-container">
-          <table class="place-table" data-day="sun">
-            <tbody>
-              <!-- JS で行が生成される -->
-            </tbody>
-          </table>
-        </div>
-        <div class="table-container">
-          <table class="schedule-table" data-day="sun">
-            <thead>
-              <tr>
-                <!-- JSで時間ヘッダ生成 -->
-              </tr>
-            </thead>
-            <tbody>
-              <!-- JS でセルが生成される -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- 名前入力パネル -->
-  <div class="names-panel active" data-day="fri"></div>
-  <div class="names-panel" data-day="sat"></div>
-  <div class="names-panel" data-day="sun"></div>
-
-  <!-- 月間シフト -->
-  <div class="month-shift-container">
-    <div class="month-shift-header-row">
+  <div class="wrapper">
+    <div class="controls">
       <label>
-        対象月：
-        <input type="month" id="monthPicker">
+        日付:
+        <!-- JSで金土日の一覧に差し替える -->
+        <select id="daySelect">
+          <option value="fri">金曜 → 土曜</option>
+          <option value="sat" selected>土曜 → 日曜</option>
+          <option value="sun">日曜 → 終了</option>
+        </select>
       </label>
-      <div class="month-shift-buttons">
-        <button id="msAddPerson" type="button">行を追加</button>
-        <button id="msApplyToSchedule" type="button">保存＆立座表へ反映</button>
+      <label>
+        <input type="checkbox" id="editToggle">
+        編集モード
+      </label>
+      <span id="currentTime"></span>
+    </div>
+
+    <!-- ===== 金曜 → 土曜 ===== -->
+    <div class="day-wrapper" data-day="fri">
+      <div class="day-title">滞在場所特別警備 立座表（金曜日＞土曜日・30分刻み）</div>
+      <div class="schedule-main">
+        <!-- 左：配置＋名前 -->
+        <div class="fixed-col">
+          <table class="place-table" data-day="fri">
+            <thead>
+              <tr><th class="place-head">配置</th></tr>
+            </thead>
+            <tbody>
+              <!-- JSで行を生成 -->
+            </tbody>
+          </table>
+        </div>
+        <!-- 右：時間スロット -->
+        <div class="scroll-col">
+          <div class="table-container">
+            <table class="schedule-table" data-day="fri">
+              <thead>
+                <tr>
+                  <th class="time-head" data-slot="0">9:30</th>
+                  <th class="time-head" data-slot="1">10:00</th>
+                  <th class="time-head" data-slot="2">10:30</th>
+                  <th class="time-head" data-slot="3">11:00</th>
+                  <th class="time-head" data-slot="4">11:30</th>
+                  <th class="time-head" data-slot="5">12:00</th>
+                  <th class="time-head" data-slot="6">12:30</th>
+                  <th class="time-head" data-slot="7">13:00</th>
+                  <th class="time-head" data-slot="8">13:30</th>
+                  <th class="time-head" data-slot="9">14:00</th>
+                  <th class="time-head" data-slot="10">14:30</th>
+                  <th class="time-head" data-slot="11">15:00</th>
+                  <th class="time-head" data-slot="12">15:30</th>
+                  <th class="time-head" data-slot="13">16:00</th>
+                  <th class="time-head" data-slot="14">16:30</th>
+                  <th class="time-head" data-slot="15">17:00</th>
+                  <th class="time-head" data-slot="16">17:30</th>
+                  <th class="time-head" data-slot="17">18:00</th>
+                  <th class="time-head" data-slot="18">18:30</th>
+                  <th class="time-head" data-slot="19">19:00</th>
+                  <th class="time-head" data-slot="20">19:30</th>
+                  <th class="time-head" data-slot="21">20:00</th>
+                  <th class="time-head" data-slot="22">20:30</th>
+                  <th class="time-head" data-slot="23">21:00</th>
+                  <th class="time-head" data-slot="24">21:30</th>
+                  <th class="time-head" data-slot="25">22:00</th>
+                  <th class="time-head" data-slot="26">22:30</th>
+                  <th class="time-head" data-slot="27">23:00</th>
+                  <th class="time-head" data-slot="28">23:30</th>
+                  <th class="time-head" data-slot="29">24:00</th>
+                  <th class="time-head" data-slot="30">24:30</th>
+                  <th class="time-head" data-slot="31">1:00</th>
+                  <th class="time-head" data-slot="32">1:30</th>
+                  <th class="time-head" data-slot="33">2:00</th>
+                  <th class="time-head" data-slot="34">2:30</th>
+                  <th class="time-head" data-slot="35">3:00</th>
+                  <th class="time-head" data-slot="36">3:30</th>
+                  <th class="time-head" data-slot="37">4:00</th>
+                  <th class="time-head" data-slot="38">4:30</th>
+                  <th class="time-head" data-slot="39">5:00</th>
+                  <th class="time-head" data-slot="40">5:30</th>
+                  <th class="time-head" data-slot="41">6:00</th>
+                  <th class="time-head" data-slot="42">6:30</th>
+                  <th class="time-head" data-slot="43">7:00</th>
+                  <th class="time-head" data-slot="44">7:30</th>
+                  <th class="time-head" data-slot="45">8:00</th>
+                  <th class="time-head" data-slot="46">8:30</th>
+                  <th class="time-head" data-slot="47">9:00</th>
+                  <th class="time-head" data-slot="48">9:30</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JSで行を生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-    <table class="month-shift-table">
-      <thead>
-        <tr id="monthShiftHeadRow">
-          <!-- JS で日付ヘッダが入る -->
-        </tr>
-      </thead>
-      <tbody id="monthShiftBody">
-        <!-- JS で行が入る -->
-      </tbody>
-    </table>
+
+    <!-- ===== 土曜 → 日曜 ===== -->
+    <div class="day-wrapper" data-day="sat">
+      <div class="day-title">滞在場所特別警備 立座表（土曜日＞日曜日・30分刻み）</div>
+      <div class="schedule-main">
+        <div class="fixed-col">
+          <table class="place-table" data-day="sat">
+            <thead>
+              <tr><th class="place-head">配置</th></tr>
+            </thead>
+            <tbody>
+              <!-- JSで行を生成 -->
+            </tbody>
+          </table>
+        </div>
+        <div class="scroll-col">
+          <div class="table-container">
+            <table class="schedule-table" data-day="sat">
+              <thead>
+                <tr>
+                  <th class="time-head" data-slot="0">8:00</th>
+                  <th class="time-head" data-slot="1">8:30</th>
+                  <th class="time-head" data-slot="2">9:00</th>
+                  <th class="time-head" data-slot="3">9:30</th>
+                  <th class="time-head" data-slot="4">10:00</th>
+                  <th class="time-head" data-slot="5">10:30</th>
+                  <th class="time-head" data-slot="6">11:00</th>
+                  <th class="time-head" data-slot="7">11:30</th>
+                  <th class="time-head" data-slot="8">12:00</th>
+                  <th class="time-head" data-slot="9">12:30</th>
+                  <th class="time-head" data-slot="10">13:00</th>
+                  <th class="time-head" data-slot="11">13:30</th>
+                  <th class="time-head" data-slot="12">14:00</th>
+                  <th class="time-head" data-slot="13">14:30</th>
+                  <th class="time-head" data-slot="14">15:00</th>
+                  <th class="time-head" data-slot="15">15:30</th>
+                  <th class="time-head" data-slot="16">16:00</th>
+                  <th class="time-head" data-slot="17">16:30</th>
+                  <th class="time-head" data-slot="18">17:00</th>
+                  <th class="time-head" data-slot="19">17:30</th>
+                  <th class="time-head" data-slot="20">18:00</th>
+                  <th class="time-head" data-slot="21">18:30</th>
+                  <th class="time-head" data-slot="22">19:00</th>
+                  <th class="time-head" data-slot="23">19:30</th>
+                  <th class="time-head" data-slot="24">20:00</th>
+                  <th class="time-head" data-slot="25">20:30</th>
+                  <th class="time-head" data-slot="26">21:00</th>
+                  <th class="time-head" data-slot="27">21:30</th>
+                  <th class="time-head" data-slot="28">22:00</th>
+                  <th class="time-head" data-slot="29">22:30</th>
+                  <th class="time-head" data-slot="30">23:00</th>
+                  <th class="time-head" data-slot="31">23:30</th>
+                  <th class="time-head" data-slot="32">0:00</th>
+                  <th class="time-head" data-slot="33">0:30</th>
+                  <th class="time-head" data-slot="34">1:00</th>
+                  <th class="time-head" data-slot="35">1:30</th>
+                  <th class="time-head" data-slot="36">2:00</th>
+                  <th class="time-head" data-slot="37">2:30</th>
+                  <th class="time-head" data-slot="38">3:00</th>
+                  <th class="time-head" data-slot="39">3:30</th>
+                  <th class="time-head" data-slot="40">4:00</th>
+                  <th class="time-head" data-slot="41">4:30</th>
+                  <th class="time-head" data-slot="42">5:00</th>
+                  <th class="time-head" data-slot="43">5:30</th>
+                  <th class="time-head" data-slot="44">6:00</th>
+                  <th class="time-head" data-slot="45">6:30</th>
+                  <th class="time-head" data-slot="46">7:00</th>
+                  <th class="time-head" data-slot="47">7:30</th>
+                  <th class="time-head" data-slot="48">8:00</th>
+                  <th class="time-head" data-slot="49">8:30</th>
+                  <th class="time-head" data-slot="50">9:00</th>
+                  <th class="time-head" data-slot="51">9:30</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JSで行を生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 日曜 → 終了 ===== -->
+    <div class="day-wrapper" data-day="sun">
+      <div class="day-title">滞在場所特別警備 立座表（日曜日＞終了・30分刻み）</div>
+      <div class="schedule-main">
+        <div class="fixed-col">
+          <table class="place-table" data-day="sun">
+            <thead>
+              <tr><th class="place-head">配置</th></tr>
+            </thead>
+            <tbody>
+              <!-- JSで行を生成 -->
+            </tbody>
+          </table>
+        </div>
+        <div class="scroll-col">
+          <div class="table-container">
+            <table class="schedule-table" data-day="sun">
+              <thead>
+                <tr>
+                  <th class="time-head" data-slot="0">8:00</th>
+                  <th class="time-head" data-slot="1">8:30</th>
+                  <th class="time-head" data-slot="2">9:00</th>
+                  <th class="time-head" data-slot="3">9:30</th>
+                  <th class="time-head" data-slot="4">10:00</th>
+                  <th class="time-head" data-slot="5">10:30</th>
+                  <th class="time-head" data-slot="6">11:00</th>
+                  <th class="time-head" data-slot="7">11:30</th>
+                  <th class="time-head" data-slot="8">12:00</th>
+                  <th class="time-head" data-slot="9">12:30</th>
+                  <th class="time-head" data-slot="10">13:00</th>
+                  <th class="time-head" data-slot="11">13:30</th>
+                  <th class="time-head" data-slot="12">14:00</th>
+                  <th class="time-head" data-slot="13">14:30</th>
+                  <th class="time-head" data-slot="14">15:00</th>
+                  <th class="time-head" data-slot="15">15:30</th>
+                  <th class="time-head" data-slot="16">16:00</th>
+                  <th class="time-head" data-slot="17">16:30</th>
+                  <th class="time-head" data-slot="18">17:00</th>
+                  <th class="time-head" data-slot="19">17:30</th>
+                  <th class="time-head" data-slot="20">18:00</th>
+                  <th class="time-head" data-slot="21">18:30</th>
+                  <th class="time-head" data-slot="22">19:00</th>
+                  <th class="time-head" data-slot="23">19:30</th>
+                  <th class="time-head" data-slot="24">20:00</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JSで行を生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 凡例 -->
+    <div class="legend">
+      <span><span class="legend-box state-本"></span>本</span>
+      <span><span class="legend-box state-立"></span>立</span>
+      <span><span class="legend-box state-座"></span>座</span>
+      <span><span class="legend-box state-巡"></span>巡</span>
+      <span><span class="legend-box state-東"></span>東</span>
+      <span><span class="legend-box state-仮眠"></span>仮眠</span>
+      <span><span class="legend-box state-休"></span>休</span>
+      <span><span class="legend-box state-掃"></span>掃</span>
+      <span><span class="legend-box state-待"></span>待</span>
+      <span><span class="legend-box state-準"></span>準</span>
+    </div>
+
+    <!-- 名前入力パネル（現状非表示） -->
+    <div class="names-wrapper">
+      <div class="names-panel" data-day="fri"></div>
+      <div class="names-panel" data-day="sat"></div>
+      <div class="names-panel" data-day="sun"></div>
+    </div>
+
+    <!-- 月間シフト（金・土・日） -->
+    <div class="month-shift-editor">
+      <div class="month-shift-header">
+        月間シフト（金・土・日）
+      </div>
+      <div class="month-shift-controls">
+        <label>対象月:
+          <input type="month" id="monthPicker">
+        </label>
+        <button type="button" id="msAddPerson">＋ 人追加</button>
+        <button type="button" id="msApplyToSchedule">保存</button>
+      </div>
+      <div class="month-shift-scroll">
+        <table class="month-shift-table">
+          <thead>
+            <tr id="monthShiftHeadRow"></tr>
+          </thead>
+          <tbody id="monthShiftBody"></tbody>
+        </table>
+      </div>
+      <div class="month-shift-hint">
+        ※ 各セルで O / X / O1〜O7 / X1〜X7 / Y1〜Y7 を指定できます。O / X は厩舎長用です。
+      </div>
+    </div>
   </div>
 
-  <!-- ===================== ここから JS 本体 ===================== -->
   <script>
-    // ===== Firestore バックエンド付きの「疑似 localStorage」 =====
-    // ブラウザ本体の localStorage / Cookie は一切使わず、
-    // 代わりに Firestore の "shiftKV" コレクションに全部保存する。
-    const db = window.db || firebase.firestore();
-    const __MEM_STORE = {};
-
-    const LS = {
-      getItem(key) {
-        return Object.prototype.hasOwnProperty.call(__MEM_STORE, key)
-          ? __MEM_STORE[key]
-          : null;
-      },
-      setItem(key, value) {
-        const v = String(value);
-        __MEM_STORE[key] = v;
-        if (db) {
-          db.collection("shiftKV").doc(key).set({ value: v }).catch(console.error);
-        }
-      },
-      removeItem(key) {
-        delete __MEM_STORE[key];
-        if (db) {
-          db.collection("shiftKV").doc(key).delete().catch(() => {});
-        }
-      },
-      key(index) {
-        const keys = Object.keys(__MEM_STORE);
-        return keys[index] || null;
-      },
-      get length() {
-        return Object.keys(__MEM_STORE).length;
-      }
-    };
-
-    // 起動時に Firestore から全キーを読み込んで __MEM_STORE に展開
-    async function preloadLSFromFirestore() {
-      if (!db) return;
-      try {
-        const snap = await db.collection("shiftKV").get();
-        snap.forEach(doc => {
-          const data = doc.data();
-          if (data && typeof data.value === "string") {
-            __MEM_STORE[doc.id] = data.value;
-          }
-        });
-      } catch (e) {
-        console.error("Firestore からの初期読み込みに失敗しました", e);
-      }
-    }
-
     (function(){
       const PLACES = [
         "厩舎長",
@@ -500,174 +667,197 @@
       const msHeadRow = document.getElementById("monthShiftHeadRow");
       const msBody = document.getElementById("monthShiftBody");
 
-      // 金曜49、土日など。土曜は 8:00〜翌10:00 で 52 コマ（26時間）
+      // Firestore 設定
+      const scheduleDocRef = db.collection("standSchedule").doc("main");
+      let remoteConfig = {
+        monthShifts: {},
+        rotary: { sat: {}, sun: {} }
+      };
+      let currentMonthStr = "";
+      let currentMonthRows = [];
+      const namesStore = { fri: {}, sat: {}, sun: {} };
+
+      async function loadRemoteConfig() {
+        try {
+          const snap = await scheduleDocRef.get();
+          if (snap.exists) {
+            const data = snap.data() || {};
+            if (data.monthShifts && typeof data.monthShifts === "object") {
+              remoteConfig.monthShifts = data.monthShifts;
+            }
+            if (data.rotary && typeof data.rotary === "object") {
+              remoteConfig.rotary = data.rotary;
+            }
+          }
+        } catch (e) {
+          console.warn("Firestore 読み込み失敗", e);
+        }
+      }
+
+      async function saveRemoteConfig(partial) {
+        try {
+          // ローカルキャッシュも更新
+          remoteConfig = {
+            ...remoteConfig,
+            ...partial
+          };
+          await scheduleDocRef.set(partial, { merge: true });
+        } catch (e) {
+          console.warn("Firestore 保存失敗", e);
+        }
+      }
+
+      // 金曜49、土日ほか
       const SLOT_COUNTS = {
         fri: 49,
         sat: 52,
         sun: 25
       };
 
-      // ===== 土曜・日曜の確定版データ =====
+      // 土曜日の初期データ（確定版）＋金曜・日曜
       const INITIAL_DATA = {
         // =========================
-        // 金曜日
+        // 金曜日（0〜48：49コ）
         // =========================
         fri: {
           "厩舎長": [
-            "本","本","待","本","本","本","本","休","休","本","本","本","本","本","本","本","本","本",
-            "本","休","休","本","本","本","本","休","本","本","本","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠",
-            "仮眠","仮眠","本","本","本","本","本","本","本","本","本","本","本","本"
+            "本", "本", "待", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "本", "本", "本", "本", "本",
+            "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+            "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本", "本"
           ],
           "外厩門 1": [
-            "座","立","待","東","東","休","立","座","立","東","東","休","休","座","立","休","休","東",
-            "東","座","座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","巡","巡","巡","座","座","座",
-            "巡","巡","巡","座","立","座","立","座","立","座","座","立","座","掃"
+            "座", "立", "待", "東", "東", "休", "立", "座", "立", "東", "東", "休", "休", "座", "立", "休", "休", "東",
+            "東", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座", "座", "座",
+            "巡", "巡", "巡", "座", "立", "座", "立", "座", "立", "座", "座", "立", "座", "掃"
           ],
           "外厩門 2": [
-            "座","座","待","立","座","東","東","休","休","座","立","座","立","東","東","座","立","座",
-            "立","休","休","座","座","休","巡","巡","巡","座","座","座","座","座","巡","巡","巡","座",
-            "仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","座","立","東","東","休","立"
+            "座", "座", "待", "立", "座", "東", "東", "休", "休", "座", "立", "座", "立", "東", "東", "座", "立", "座",
+            "立", "休", "休", "座", "座", "休", "巡", "巡", "巡", "座", "座", "座", "座", "座", "巡", "巡", "巡", "座",
+            "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "休", "立"
           ],
           "外厩門 3": [
-            "立","待","立","座","立","座","休","立","座","休","休","立","座","立","座","東","東","休",
-            "休","座","座","東","東","座","座","座","座","巡","巡","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠",
-            "仮眠","仮眠","座","座","座","座","立","座","東","東","立","座","立","座"
+            "立", "待", "立", "座", "立", "座", "休", "立", "座", "休", "休", "立", "座", "立", "座", "東", "東", "休",
+            "休", "座", "座", "東", "東", "座", "座", "座", "座", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+            "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "東", "東", "立", "座", "立", "座"
           ],
           "外厩門 4": [
-            "座","待","座","休","休","立","座","東","東","立","座","東","東","休","休","立","座","座",
-            "座","東","東","巡","巡","巡","","","","","","","","","","","","","","",
-            "","","","","","","","",""
+            "座", "待", "座", "休", "休", "立", "座", "東", "東", "立", "座", "東", "東", "休", "休", "立", "座", "座",
+            "座", "東", "東", "巡", "巡", "巡", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", ""
           ],
           "西通用門 4": [
-            "","","","","","","","","","","","","","","","","","","","","","","",
-            "","座","座","座","座","休","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","座","巡","巡",
-            "巡","巡","座","立","座","立","掃","休","座"
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "巡", "巡",
+            "巡", "巡", "座", "立", "座", "立", "掃", "休", "座"
           ],
           "西通用門 5": [
-            "立","待","座","休","休","立","座","本","本","立","座","休","立","座","立","休","休","座",
-            "座","座","座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","座","座","座","本","本","本",
-            "巡","巡","巡","座","座","座","座","立","座","立","休","座","立","掃"
+            "立", "待", "座", "休", "休", "立", "座", "本", "本", "立", "座", "休", "立", "座", "立", "休", "休", "座",
+            "座", "座", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "座", "座", "本", "本", "本",
+            "巡", "巡", "巡", "座", "座", "座", "座", "立", "座", "立", "休", "座", "立", "掃"
           ],
           "西通用門 6": [
-            "座","立","本","立","座","休","立","座","立","座","立","座","休","休","座","立","座","休",
-            "座","座","座","巡","巡","巡","休","座","座","巡","巡","本","本","本","巡","巡","巡","座",
-            "座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","待","休","座","立"
+            "座", "立", "本", "立", "座", "休", "立", "座", "立", "座", "立", "座", "休", "休", "座", "立", "座", "休",
+            "座", "座", "座", "巡", "巡", "巡", "休", "座", "座", "巡", "巡", "本", "本", "本", "巡", "巡", "巡", "座",
+            "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "待", "休", "座", "立"
           ],
           "西通用門 7": [
-            "座","座","立","座","立","座","待","立","座","休","休","立","座","立","待","座","立","座",
-            "休","本","本","座","座","座","巡","巡","巡","休","座","巡","巡","巡","座","座","座","本",
-            "本","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","座","立","休","座"
+            "座", "座", "立", "座", "立", "座", "待", "立", "座", "休", "休", "立", "座", "立", "待", "座", "立", "座",
+            "休", "本", "本", "座", "座", "座", "巡", "巡", "巡", "休", "座", "巡", "巡", "巡", "座", "座", "座", "本",
+            "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "休", "座"
           ]
         },
 
         // =========================
-        // 土曜日
+        // 土曜日（8:00〜翌10:00：52コ・0〜3は8:00〜9:30の空白）
         // =========================
         sat: {
           "厩舎長": [
-            "","","","",
-            "本","本","休","本","本","本","本","本","休","休","本","本","本","本","休",
-            "本","本","本","休","休","本","本","本","本","休","本","本","本","仮眠","仮眠","仮眠","仮眠",
-            "仮眠","仮眠","仮眠","仮眠","本","本","本","本","本","本","本","本","本","待","本","本"
+            "", "", "", "", "本", "本", "休", "本", "本", "本", "本", "本", "休", "休", "本", "本", "本", "本", "休",
+            "本", "本", "本", "休", "休", "本", "本", "本", "本", "休", "本", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠",
+            "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "本", "本", "本", "本", "本", "本", "待", "本", "本"
           ],
           "外厩門 1": [
-            "","","","",
-            "座","休","休","座","立","休","東","東","座","立","休","休","立","座","東",
-            "東","休","休","立","座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","巡","巡","巡","座",
-            "座","座","巡","巡","座","座","立","座","立","座","立","座","立","座","立","掃"
+            "", "", "", "", "座", "休", "休", "座", "立", "休", "東", "東", "座", "立", "休", "休", "立", "座", "東",
+            "東", "休", "休", "立", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "巡", "巡", "巡", "座",
+            "座", "座", "巡", "巡", "座", "座", "立", "座", "立", "座", "立", "座", "立", "座", "立", "掃"
           ],
           "外厩門 2": [
-            "","","","",
-            "立","座","立","待","休","休","座","立","休","休","東","東","立","座","座",
-            "立","東","東","休","休","座","座","休","座","座","座","巡","巡","座","座","座","巡","巡",
-            "巡","座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","座","立","東","東","座","立"
+            "", "", "", "", "立", "座", "立", "待", "休", "休", "座", "立", "休", "休", "東", "東", "立", "座", "座",
+            "立", "東", "東", "休", "休", "座", "座", "休", "座", "座", "座", "巡", "巡", "座", "座", "座", "巡", "巡",
+            "巡", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "座", "立", "東", "東", "座", "立"
           ],
           "外厩門 3": [
-            "","","","",
-            "準","立","座","立","座","立","休","休","立","座","座","休","東","東","休",
-            "休","座","立","座","立","東","東","座","巡","巡","巡","休","座","仮眠","仮眠","仮眠","仮眠",
-            "仮眠","仮眠","仮眠","座","座","座","座","立","座","立","東","東","座","立","休",""
+            "", "", "", "", "準", "立", "座", "立", "座", "立", "休", "休", "立", "座", "座", "休", "東", "東", "休",
+            "休", "座", "立", "座", "立", "東", "東", "座", "巡", "巡", "巡", "休", "座", "仮眠", "仮眠", "仮眠", "仮眠",
+            "仮眠", "仮眠", "仮眠", "座", "座", "座", "座", "立", "座", "立", "東", "東", "座", "立", "休", ""
           ],
           "外厩門 4": [
-            "","","","",
-            "","","","休","休","座","立","座","東","東","立","座","休","休","立","座",
-            "立","座","東","東","巡","巡","巡","巡","巡","巡","座","","","","","","","","",
-            "","","","","","","","","","","",""
+            "", "", "", "", "", "", "", "休", "休", "座", "立", "座", "東", "東", "立", "座", "休", "休", "立", "座",
+            "立", "座", "東", "東", "巡", "巡", "巡", "巡", "巡", "巡", "座", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", ""
           ],
           "西通用門 4": [
-            "","","","",
-            "準","立","座","","","","","","","","","","","","","","",
-            "","","","","","座","座","座","座","休","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠",
-            "座","座","座","座","座","座","座","立","座","立","休","掃"
+            "", "", "", "", "準", "立", "座", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "座", "座", "座", "座", "休", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠",
+            "座", "座", "座", "座", "座", "座", "座", "立", "座", "立", "休", "掃"
           ],
           "西通用門 5": [
-            "","","","",
-            "準","座","休","休","立","座","立","座","立","本","休","休","立","座","立",
-            "座","休","休","本","座","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","本","本","本","巡",
-            "巡","巡","座","座","座","座","巡","巡","巡","巡","巡","座","掃","待","立","座"
+            "", "", "", "", "準", "座", "休", "休", "立", "座", "立", "座", "立", "本", "休", "休", "立", "座", "立",
+            "座", "休", "休", "本", "座", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "本", "本", "本", "巡",
+            "巡", "巡", "座", "座", "座", "座", "巡", "巡", "巡", "巡", "巡", "座", "掃", "待", "立", "座"
           ],
           "西通用門 6": [
-            "","","","",
-            "立","待","本","立","休","休","座","立","座","座","立","座","休","休","座",
-            "立","座","立","座","立","座","座","座","休","本","座","座","座","巡","巡","巡","本","本",
-            "本","巡","巡","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","休","本","座","立"
+            "", "", "", "", "立", "待", "本", "立", "休", "休", "座", "立", "座", "座", "立", "座", "休", "休", "座",
+            "立", "座", "立", "座", "立", "座", "座", "座", "休", "本", "座", "座", "座", "巡", "巡", "巡", "本", "本",
+            "本", "巡", "巡", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "休", "本", "座", "立"
           ],
           "西通用門 7": [
-            "","","","",
-            "座","休","立","座","座","立","休","休","本","立","座","立","座","立","休",
-            "休","立","座","立","本","巡","巡","巡","座","座","休","巡","巡","座","座","座","座","座",
-            "座","本","本","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","仮眠","立","座","待","座"
+            "", "", "", "", "座", "休", "立", "座", "座", "立", "休", "休", "本", "立", "座", "立", "座", "立", "休",
+            "休", "立", "座", "立", "本", "巡", "巡", "巡", "座", "座", "休", "巡", "巡", "座", "座", "座", "座", "座",
+            "座", "本", "本", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "仮眠", "立", "座", "待", "座"
           ]
         },
 
         // =========================
-        // 日曜日
+        // 日曜日（8:00〜20:00：25コ・0〜3は8:00〜9:30の空白）
         // =========================
         sun: {
           "厩舎長": [
-            "","","","",
-            "本","本","待","本","本","本","休","本","本","本","本","本","本","休","本",
-            "本","本","本","本","本","本"
+            "", "", "", "", "本", "本", "待", "本", "本", "本", "休", "本", "本", "本", "本", "本", "本", "休", "本",
+            "本", "本", "本", "本", "本", "本"
           ],
           "外厩門 1": [
-            "","","","",
-            "立","座","待","立","座","休","東","東","東","休","座","立","休","座","立",
-            "座","座","座","座","座","座"
+            "", "", "", "", "立", "座", "待", "立", "座", "休", "東", "東", "東", "休", "座", "立", "休", "座", "立",
+            "座", "座", "座", "座", "座", "座"
           ],
           "外厩門 2": [
-            "","","","",
-            "準","立","座","休","立","座","立","座","立","東","東","休","座","立","休",
-            "東","東","座","座","東","東"
+            "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "立", "東", "東", "休", "座", "立", "休",
+            "東", "東", "座", "座", "東", "東"
           ],
           "外厩門 3": [
-            "","","","",
-            "座","待","立","座","休","立","座","立","座","立","休","東","東","休","座",
-            "立","座","東","東","座","座"
+            "", "", "", "", "座", "待", "立", "座", "休", "立", "座", "立", "座", "立", "休", "東", "東", "休", "座",
+            "立", "座", "東", "東", "座", "座"
           ],
           "外厩門 4": [
-            "","","","",
-            "","","","","","","","休","座","立","座","立","東","東","休","",
-            "","","","",""
+            "", "", "", "", "", "", "", "", "", "", "", "", "休", "座", "立", "座", "立", "東", "東", "休", "",
+            "", "", "", ""
           ],
           "西通用門 4": [
-            "","","","",
-            "準","立","座","休","立","座","立","座","休","","","","","","","休",
-            "座","座","座","座","座"
+            "", "", "", "", "準", "立", "座", "休", "立", "座", "立", "座", "休", "", "", "", "", "", "", "休",
+            "座", "座", "座", "座", "座"
           ],
           "西通用門 5": [
-            "","","","",
-            "立","座","立","座","待","立","座","休","立","座","立","座","座","本","立",
-            "座","","","","",""
+            "", "", "", "", "立", "座", "立", "座", "待", "立", "座", "休", "立", "座", "立", "座", "座", "本", "立",
+            "座", "", "", "", "", ""
           ],
           "西通用門 6": [
-            "","","","",
-            "座","待","本","立","座","休","本","立","座","立","座","立","休","座","座",
-            "立","","","","",""
+            "", "", "", "", "座", "待", "本", "立", "座", "休", "本", "立", "座", "立", "座", "立", "休", "座", "座",
+            "立", "", "", "", "", ""
           ]
         }
       };
 
-      // 前回のスロット
+      // 前回のスロットインデックス
       let prevSlotIndex = null;
 
       function getSlotCountForDay(day) {
@@ -675,39 +865,6 @@
         if (!table) return SLOT_COUNTS[day] || 48;
         const headSlots = table.querySelectorAll("thead th[data-slot]").length;
         return headSlots || (SLOT_COUNTS[day] || 48);
-      }
-
-      // thead の時間ヘッダを動的生成
-      function buildScheduleHeads() {
-        ["fri","sat","sun"].forEach(day => {
-          const table = document.querySelector(`table.schedule-table[data-day="${day}"]`);
-          if (!table) return;
-          const thead = table.querySelector("thead");
-          if (!thead) return;
-          const tr = thead.querySelector("tr") || thead.appendChild(document.createElement("tr"));
-          tr.innerHTML = "";
-
-          const slotCount = SLOT_COUNTS[day] || 48;
-          let startMin;
-          if (day === "fri") {
-            startMin = 9 * 60 + 30;   // 9:30〜
-          } else {
-            startMin = 8 * 60;        // 土日 8:00〜
-          }
-
-          for (let i = 0; i < slotCount; i++) {
-            const th = document.createElement("th");
-            const minutes = startMin + 30 * i;
-            const mmDay = ((minutes % (24 * 60)) + (24 * 60)) % (24 * 60);
-            const h = Math.floor(mmDay / 60);
-            const m = mmDay % 60;
-            const label = `${h}:${m.toString().padStart(2,"0")}`;
-            th.textContent = label;
-            th.dataset.slot = String(i);
-            th.className = "time-head";
-            tr.appendChild(th);
-          }
-        });
       }
 
       // 場所テーブルのtbody生成
@@ -723,7 +880,7 @@
             tr.dataset.place = place;
             const th = document.createElement("th");
             th.className = "place-cell";
-            th.textContent = place;
+            th.textContent = place; // 後で名前を反映
             tr.appendChild(th);
             tbody.appendChild(tr);
           });
@@ -761,27 +918,24 @@
         });
       }
 
-      // 名前 → 表示文字列
+      // 名前 → 表示文字列（厩舎長だけ1人分）
       function buildPlaceDisplay(day, place) {
+        const dayData = namesStore[day] || {};
+        const np = dayData[place] || {};
+        const n1 = np.n1 || "";
+        const n2 = np.n2 || "";
         let baseLabel;
 
         if (place === "厩舎長") {
-          const key = `name_${day}_${place}_1`;
-          const n = LS.getItem(key) || "";
+          const n = n1 || n2;
           baseLabel = n ? `${n}（${place}）` : place;
         } else {
-          const key1 = `name_${day}_${place}_1`;
-          const key2 = `name_${day}_${place}_2`;
-          const n1 = LS.getItem(key1) || "";
-          const n2 = LS.getItem(key2) || "";
           let namePart = "";
           if (n1 && n2) namePart = `${n1}・${n2}`;
           else if (n1) namePart = n1;
           else if (n2) namePart = n2;
           baseLabel = namePart ? `${namePart}（${place}）` : place;
         }
-
-        // ロータリー情報は表示しない仕様のまま
         return baseLabel;
       }
 
@@ -801,63 +955,9 @@
         ["fri","sat","sun"].forEach(syncPlaceHeaderForDay);
       }
 
+      // 名前パネルは現在使わない（見た目維持のため空実装）
       function buildNamePanels() {
-        const panels = document.querySelectorAll(".names-panel");
-        panels.forEach(panel => {
-          const day = panel.dataset.day;
-          panel.innerHTML = "";
-          PLACES.forEach(place => {
-            if (day === "sun" && place === "西通用門 7") return;
-            const line = document.createElement("div");
-            line.className = "name-line";
-            line.dataset.place = place;
-
-            const label = document.createElement("span");
-            label.className = "name-line-label";
-            label.textContent = place;
-            line.appendChild(label);
-
-            const isSingle = (place === "厩舎長");
-            if (isSingle) {
-              const input = document.createElement("input");
-              input.placeholder = "名前";
-              const key = `name_${day}_${place}_1`;
-              input.value = LS.getItem(key) || "";
-              input.addEventListener("input", () => {
-                LS.setItem(key, input.value);
-                syncPlaceHeaderForDay(day);
-                syncRowHeightsForDay(day);
-              });
-              line.appendChild(input);
-            } else {
-              const input1 = document.createElement("input");
-              input1.placeholder = "名前1";
-              const input2 = document.createElement("input");
-              input2.placeholder = "名前2";
-
-              const key1 = `name_${day}_${place}_1`;
-              const key2 = `name_${day}_${place}_2`;
-              input1.value = LS.getItem(key1) || "";
-              input2.value = LS.getItem(key2) || "";
-
-              input1.addEventListener("input", () => {
-                LS.setItem(key1, input1.value);
-                syncPlaceHeaderForDay(day);
-                syncRowHeightsForDay(day);
-              });
-              input2.addEventListener("input", () => {
-                LS.setItem(key2, input2.value);
-                syncPlaceHeaderForDay(day);
-                syncRowHeightsForDay(day);
-              });
-
-              line.appendChild(input1);
-              line.appendChild(input2);
-            }
-
-            panel.appendChild(line);
-          });
-        });
+        // names-wrapper は非表示のため、今は何もしない
       }
 
       function applyStateClass(td, value) {
@@ -872,19 +972,16 @@
         }
       }
 
-      // ロータリー用バックアップはメモリだけで管理
-      const rotaryBackup = {};
-
+      // ★ ロータリー関連ユーティリティ
       function getRotaryTarget(day) {
-        if (day === "sat" || day === "sun") {
-          return { targetDay: day };
-        }
+        // 土日とも自日付テーブルに書き込む
         return { targetDay: day };
       }
 
       function getRotaryBaseSlots(day) {
+        // 8:00,8:30,9:00 → slot 0〜2 をロータリー用として使用
         if (day === "sat" || day === "sun") {
-          return [0, 1, 2]; // 8:00〜9:00
+          return [0, 1, 2];
         }
         return [];
       }
@@ -892,67 +989,47 @@
       function getRotarySetting(day, type) {
         if (day === "sat" || day === "sun") {
           if (type === "up") {
+            // ロータリー（↑）: 8:00, 8:30
             return { slots: [0, 1], mark: "ロ↑" };
           }
           if (type === "down") {
+            // ロータリー（↓）: 8:30, 9:00
             return { slots: [1, 2], mark: "ロ↓" };
           }
         }
         return { slots: [], mark: "" };
       }
 
-      function restoreOriginalCells(day, place) {
-        const backupKey = `${day}_${place}`;
-        const data = rotaryBackup[backupKey];
-        if (!data) return;
-
-        const target = getRotaryTarget(day);
-        const table = document.querySelector(`table.schedule-table[data-day="${target.targetDay}"]`);
-        if (!table) return;
-        const tr = table.querySelector(`tbody tr[data-place="${place}"]`);
-        if (!tr) return;
-
-        Object.keys(data).forEach(slotStr => {
-          const td = tr.querySelector(`td[data-slot="${slotStr}"]`);
-          if (!td) return;
-          const v = data[slotStr] || "";
-          td.textContent = v;
-          applyStateClass(td, v);
-          const cellKey = `cell_${target.targetDay}_${place}_${slotStr}`;
-          if (v) {
-            LS.setItem(cellKey, v);
-          } else {
-            LS.removeItem(cellKey);
-          }
-        });
-        delete rotaryBackup[backupKey];
-      }
-
-      function applyRotarySelection(day, place, value) {
+      // ロータリーの選択を適用（up / down / 解除）
+      function applyRotarySelection(day, place, value, fromRemote) {
         const baseSlots = getRotaryBaseSlots(day);
         if (!baseSlots.length) return;
 
-        restoreOriginalCells(day, place);
-
-        if (value !== "up" && value !== "down") {
-          return;
-        }
-
         const target = getRotaryTarget(day);
         const table = document.querySelector(`table.schedule-table[data-day="${target.targetDay}"]`);
         if (!table) return;
         const tr = table.querySelector(`tbody tr[data-place="${place}"]`);
         if (!tr) return;
 
-        const backupKey = `${day}_${place}`;
-        const backup = {};
+        // まず 8:00〜9:00 の3枠をリセット
         baseSlots.forEach(slotIdx => {
           const td = tr.querySelector(`td[data-slot="${slotIdx}"]`);
           if (!td) return;
-          backup[slotIdx] = td.textContent.trim();
+          td.textContent = "";
+          applyStateClass(td, "");
         });
-        rotaryBackup[backupKey] = backup;
 
+        // 解除ならここで終了＋Firestore更新
+        if (value !== "up" && value !== "down") {
+          if (!fromRemote) {
+            if (!remoteConfig.rotary[day]) remoteConfig.rotary[day] = {};
+            delete remoteConfig.rotary[day][place];
+            saveRemoteConfig({ rotary: remoteConfig.rotary });
+          }
+          return;
+        }
+
+        // 新しいロータリー設定を反映
         const cfg = getRotarySetting(day, value);
         const slots = cfg.slots;
         const mark = cfg.mark;
@@ -961,12 +1038,33 @@
           if (!td) return;
           td.textContent = mark;
           applyStateClass(td, mark);
-          const cellKey = `cell_${target.targetDay}_${place}_${slotIdx}`;
-          LS.setItem(cellKey, mark);
+        });
+
+        if (!fromRemote) {
+          if (!remoteConfig.rotary[day]) remoteConfig.rotary[day] = {};
+          remoteConfig.rotary[day][place] = value;
+          saveRemoteConfig({ rotary: remoteConfig.rotary });
+        }
+      }
+
+      // Firestore に保存されているロータリー設定を一括適用
+      function applyAllRotaryFromRemote() {
+        if (!remoteConfig.rotary) return;
+        ["sat","sun"].forEach(day => {
+          const dayRot = remoteConfig.rotary[day];
+          if (!dayRot) return;
+          Object.keys(dayRot).forEach(place => {
+            const t = dayRot[place];
+            if (t === "up" || t === "down") {
+              applyRotarySelection(day, place, t, true);
+            }
+          });
         });
       }
 
+      // ロータリー設定用の小さなメニューを開く（土日共通）
       function openRotaryMenu(day, place, anchorEl) {
+        // 既存メニューがあれば消す
         const old = document.getElementById("rotaryMenu");
         if (old && old.parentNode) {
           old.parentNode.removeChild(old);
@@ -985,7 +1083,6 @@
         menu.appendChild(title);
 
         const select = document.createElement("select");
-
         const optNone = document.createElement("option");
         optNone.value = "";
         optNone.textContent = "（ロータリーなし）";
@@ -1001,12 +1098,13 @@
         optDown.textContent = "ロータリー（↓）8:30〜";
         select.appendChild(optDown);
 
-        const key = `rotary_${day}_${place}`;
-        select.value = LS.getItem(key) || "";
+        const saved = (remoteConfig.rotary[day] && remoteConfig.rotary[day][place]) || "";
+        select.value = saved;
 
         menu.appendChild(select);
         document.body.appendChild(menu);
 
+        // アンカーの右側あたりに表示
         const rect = anchorEl.getBoundingClientRect();
         menu.style.left = `${rect.right + 8}px`;
         menu.style.top = `${rect.top}px`;
@@ -1019,12 +1117,8 @@
 
         select.addEventListener("change", () => {
           const value = select.value;
-          applyRotarySelection(day, place, value);
-          if (value) {
-            LS.setItem(key, value);
-          } else {
-            LS.removeItem(key);
-          }
+          applyRotarySelection(day, place, value, false);
+          // ロータリー設定変更後に、各日のヘッダーを更新
           syncPlaceHeaderForDay("sat");
           syncPlaceHeaderForDay("fri");
           syncPlaceHeaderForDay("sun");
@@ -1032,6 +1126,7 @@
           closeMenu();
         });
 
+        // 外側クリックで閉じる
         setTimeout(() => {
           const handler = (ev) => {
             if (!menu.contains(ev.target)) {
@@ -1043,51 +1138,33 @@
         }, 0);
       }
 
+      // 「配置＋名前」セルクリックでロータリーメニューを開く（土日）
       function setupRotaryClickHandlers() {
         ["sat","sun"].forEach(day => {
           const placeTable = document.querySelector(`table.place-table[data-day="${day}"]`);
           if (!placeTable) return;
 
           placeTable.addEventListener("click", (e) => {
+            // 編集モード中のみ有効
             if (!document.body.classList.contains("month-editing")) return;
+
             const th = e.target.closest(".place-cell");
             if (!th) return;
             const tr = th.parentElement;
             const place = tr.dataset.place || "";
             if (!place) return;
+
             openRotaryMenu(day, place, th);
           });
         });
       }
 
-      // セル保存／読込（Firestore付き LS）
-      function saveCell(td) {
-        const day = td.closest("table.schedule-table").dataset.day;
-        const place = td.parentElement.dataset.place || "";
-        const slot = td.dataset.slot || "";
-        const key = `cell_${day}_${place}_${slot}`;
-        const value = td.textContent.trim();
-        LS.setItem(key, value);
+      // セルクリック編集は無効化（何もしない）
+      function attachCellHandlers() {
+        return;
       }
 
-      function loadCellsFromStorage() {
-        document.querySelectorAll("table.schedule-table").forEach(table => {
-          const day = table.dataset.day;
-          table.querySelectorAll("tbody tr").forEach(tr => {
-            const place = tr.dataset.place || "";
-            tr.querySelectorAll("td[data-slot]").forEach(td => {
-              const slot = td.dataset.slot || "";
-              const key = `cell_${day}_${place}_${slot}`;
-              const value = LS.getItem(key);
-              if (value !== null) {
-                td.textContent = value;
-                applyStateClass(td, value);
-              }
-            });
-          });
-        });
-      }
-
+      // ===== 配置テーブルとタイムテーブルの行高さを揃える =====
       function syncRowHeightsForDay(day){
         const placeTable  = document.querySelector(`table.place-table[data-day="${day}"]`);
         const schedTable  = document.querySelector(`table.schedule-table[data-day="${day}"]`);
@@ -1100,11 +1177,15 @@
         for (let i = 0; i < len; i++){
           const pr = placeRows[i];
           const sr = schedRows[i];
+
+          // いったんリセットしてから測る
           pr.style.height = "";
           sr.style.height = "";
+
           const ph = pr.getBoundingClientRect().height;
           const sh = sr.getBoundingClientRect().height;
           const h  = Math.max(ph, sh);
+
           pr.style.height = h + "px";
           sr.style.height = h + "px";
         }
@@ -1114,6 +1195,7 @@
         ["fri","sat","sun"].forEach(syncRowHeightsForDay);
       }
 
+      // time-head の表示を 01:00 形式に統一
       function normalizeTimeHeaders(){
         document.querySelectorAll(".time-head").forEach(th => {
           const txt = th.textContent.trim();
@@ -1126,24 +1208,23 @@
         });
       }
 
-      function attachCellHandlers() {
-        // ここを有効にすればセル直接編集も Firestore 経由で保存できる
-        // （いまは月間シフトからの反映＆ロータリー専用なので何もしない）
-        return;
-      }
-
+      // 現在時刻 → スロットindex
       function getCurrentSlotIndex(date, day) {
         const totalMin = date.getHours() * 60 + date.getMinutes();
+
         let startMin;
         if (day === "fri") {
+          // 金曜は 9:30 スタート
           startMin = 9 * 60 + 30;
         } else if (day === "sat" || day === "sun") {
+          // 土日はいずれも 8:00 スタート
           startMin = 8 * 60;
         } else {
           startMin = 0;
         }
 
         const slotCount = getSlotCountForDay(day);
+
         let diff = totalMin - startMin;
         diff = (diff % (24 * 60) + (24 * 60)) % (24 * 60);
 
@@ -1153,9 +1234,11 @@
         return idx;
       }
 
+      // 現在時刻の列を「配置」のすぐ右に持ってくる
       function scrollToNowColumn(smooth) {
         if (!daySelect) return;
         let activeDay = daySelect.value;
+        // daySelect は YYYY-MM-DD（日付）を持つので、曜日キーに変換
         if (activeDay && activeDay.includes("-")) {
           const d = new Date(activeDay + "T00:00:00");
           if (!isNaN(d.getTime())) {
@@ -1167,6 +1250,7 @@
         }
         const wrapper = document.querySelector(`.day-wrapper[data-day="${activeDay}"]`);
         if (!wrapper) return;
+
         const container = wrapper.querySelector(".table-container");
         const table = wrapper.querySelector("table.schedule-table");
         if (!container || !table) return;
@@ -1178,6 +1262,7 @@
 
         const targetLeft = target.offsetLeft;
         const margin = 0;
+
         let desired = targetLeft - margin;
         if (desired < 0) desired = 0;
 
@@ -1237,6 +1322,7 @@
         syncRowHeightsForDay(day);
       }
 
+      // ===== 月間シフト（金・土・日） =====
       function getActiveMonthStr() {
         if (!monthPicker) return "";
         let ym = monthPicker.value;
@@ -1260,7 +1346,7 @@
         const d = new Date(y, m, 1);
         const wNames = ["日", "月", "火", "水", "木", "金", "土"];
         while (d.getMonth() === m) {
-          const dow = d.getDay();
+          const dow = d.getDay(); // 0:日,5:金,6:土
           if (dow === 5 || dow === 6 || dow === 0) {
             const yyyy = d.getFullYear();
             const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -1275,18 +1361,20 @@
         return dates;
       }
 
+      // 日付プルダウン(daySelect)を、対象月の金土日フル一覧に差し替える
       function rebuildDaySelectForActiveMonth() {
         if (!daySelect) return;
         const infos = getFriSatSunDatesForActiveMonth();
         daySelect.innerHTML = "";
         infos.forEach(info => {
           const opt = document.createElement("option");
-          opt.value = info.dateStr;
-          opt.textContent = info.label;
+          opt.value = info.dateStr; // YYYY-MM-DD
+          opt.textContent = info.label; // 例: 12/05(金)
           daySelect.appendChild(opt);
         });
         if (!infos.length) return;
 
+        // 今日が一覧に含まれていればその日を自動選択
         const today = new Date();
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -1296,50 +1384,37 @@
         if (hasToday) {
           daySelect.value = todayStr;
         }
+
         applySelectedDateToSchedule();
       }
 
-      function applySelectedDateToSchedule() {
-        if (!daySelect || !daySelect.value) return;
-        const dateStr = daySelect.value;
-        const d = new Date(dateStr + "T00:00:00");
-        if (isNaN(d.getTime())) return;
-        const dow = d.getDay();
-        const dayKey = (dow === 5 ? "fri" : dow === 6 ? "sat" : dow === 0 ? "sun" : null);
-        if (!dayKey) return;
-
-        applyMonthShiftToSchedule(dateStr, dayKey);
-        setActiveDay(dayKey);
-      }
-
+      // 指定した日付(YYYY-MM-DD)・曜日キー(fri/sat/sun)に対して、
+      // 月間シフトの内容から「配置者の名前」を namesStore に書き込む
       function applyMonthShiftToSchedule(dateStr, dayKey) {
-        const ym = dateStr.slice(0,7);
-        const key = `monthshift_${ym}`;
-        let rows = [];
-        try {
-          const raw = LS.getItem(key);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed)) rows = parsed;
-          }
-        } catch(e) {
-          console.warn("月間シフト読み込み失敗", e);
-        }
-        if (!rows.length) return;
+        const rows = loadMonthShiftData();
+        if (!rows || !rows.length) return;
 
         const dateInfos = getFriSatSunDatesForActiveMonth();
         const targetInfo = dateInfos.find(info => info.dateStr === dateStr);
-        if (!targetInfo) return;
+        if (!targetInfo) {
+          return;
+        }
 
+        // 場所一覧（0:厩舎長, 1以降が他の場所）
         const allPlaces = PLACES.slice();
         const otherPlaces = allPlaces.filter(p => p !== "厩舎長");
 
+        // namesStore の初期化
+        if (!namesStore[dayKey]) namesStore[dayKey] = {};
         allPlaces.forEach(place => {
-          LS.removeItem(`name_${dayKey}_${place}_1`);
-          LS.removeItem(`name_${dayKey}_${place}_2`);
+          if (dayKey === "sun" && place === "西通用門 7") return;
+          namesStore[dayKey][place] = { n1: "", n2: "" };
         });
 
         const placeToNames = {};
+
+        // 各行のコードを読み取り、placeToNames に詰める
+        const dateStrs = dateInfos.map(d => d.dateStr);
 
         rows.forEach(row => {
           const rawName = (row.name || "").trim();
@@ -1357,45 +1432,65 @@
 
           const m = code.match(/^([OXY])(\d)$/);
           if (!m) return;
-          const num = parseInt(m[2], 10);
+          const num = parseInt(m[2], 10); // 1〜7
           if (!(num >= 1 && num <= 7)) return;
           const idx = num - 1;
+
           if (idx < 0 || idx >= otherPlaces.length) return;
           const place = otherPlaces[idx];
           if (!place) return;
+
           if (!placeToNames[place]) placeToNames[place] = [];
           placeToNames[place].push(rawName);
         });
 
+        // placeToNames → namesStore に反映（最大2人まで）
         Object.keys(placeToNames).forEach(place => {
           const arr = placeToNames[place];
           if (!arr || !arr.length) return;
           const n1 = arr[0];
           const n2 = arr[1];
 
+          if (!namesStore[dayKey]) namesStore[dayKey] = {};
           if (place === "厩舎長") {
-            LS.setItem(`name_${dayKey}_${place}_1`, n1);
+            namesStore[dayKey][place] = { n1, n2: "" };
           } else {
-            LS.setItem(`name_${dayKey}_${place}_1`, n1);
-            if (n2) {
-              LS.setItem(`name_${dayKey}_${place}_2`, n2);
-            }
+            namesStore[dayKey][place] = { n1, n2: n2 || "" };
           }
         });
 
-        buildNamePanels();
+        // 表示更新
         syncPlaceHeaderForDay(dayKey);
         syncRowHeightsForDay(dayKey);
+      }
+
+      // daySelectで選ばれている日付に応じて、表示するシフト(曜日)を切り替える
+      function applySelectedDateToSchedule() {
+        if (!daySelect || !daySelect.value) return;
+        const dateStr = daySelect.value; // YYYY-MM-DD
+        const d = new Date(dateStr + "T00:00:00");
+        if (isNaN(d.getTime())) return;
+        const dow = d.getDay(); // 0〜6
+        const dayKey = (dow === 5 ? "fri" : dow === 6 ? "sat" : dow === 0 ? "sun" : null);
+        if (!dayKey) return;
+
+        // 月間シフトから、この日付の配置者を各場所に反映
+        applyMonthShiftToSchedule(dateStr, dayKey);
+
+        // 対象日の表示を切り替え
+        setActiveDay(dayKey);
+      }
+
+      function loadMonthShiftData() {
+        return currentMonthRows || [];
       }
 
       function saveMonthShiftTable() {
         if (!monthPicker || !msBody) return;
         const ym = getActiveMonthStr();
-        const key = `monthshift_${ym}`;
-
-        const rows = [];
         const dateInfos = getFriSatSunDatesForActiveMonth();
         const dateStrs = dateInfos.map(d => d.dateStr);
+        const rows = [];
 
         msBody.querySelectorAll("tr").forEach(tr => {
           const nameInput = tr.querySelector("td.month-shift-name input");
@@ -1412,11 +1507,11 @@
           rows.push({ name, assignments });
         });
 
-        try {
-          LS.setItem(key, JSON.stringify(rows));
-        } catch (e) {
-          console.warn("月間シフトの保存に失敗しました", e);
-        }
+        currentMonthStr = ym;
+        currentMonthRows = rows;
+        if (!remoteConfig.monthShifts) remoteConfig.monthShifts = {};
+        remoteConfig.monthShifts[ym] = rows;
+        saveRemoteConfig({ monthShifts: remoteConfig.monthShifts });
       }
 
       function appendMonthShiftRow(rowData, dateInfos) {
@@ -1471,22 +1566,6 @@
         msBody.appendChild(tr);
       }
 
-      function loadMonthShiftData() {
-        if (!monthPicker) return [];
-        const ym = getActiveMonthStr();
-        const key = `monthshift_${ym}`;
-        try {
-          const raw = LS.getItem(key);
-          if (!raw) return [];
-          const parsed = JSON.parse(raw);
-          if (!Array.isArray(parsed)) return [];
-          return parsed;
-        } catch (e) {
-          console.warn("月間シフト読み込み失敗", e);
-          return [];
-        }
-      }
-
       function renderMonthShiftTable() {
         if (!msHeadRow || !msBody) return;
         const dateInfos = getFriSatSunDatesForActiveMonth();
@@ -1512,17 +1591,11 @@
         }
       }
 
-      // ==== 起動処理 ====
       document.addEventListener("DOMContentLoaded", async () => {
-        // まず Firestore から LS 相当のキーを全部読み込む
-        await preloadLSFromFirestore();
-
-        buildScheduleHeads();
         buildPlaceTableBodies();
         buildScheduleBodies();
         buildNamePanels();
         attachCellHandlers();
-        loadCellsFromStorage();
         syncAllPlaceHeaders();
         normalizeTimeHeaders();
         syncAllRowHeights();
@@ -1547,6 +1620,8 @@
             monthPicker.value = `${now.getFullYear()}-${m}`;
           }
           monthPicker.addEventListener("change", () => {
+            currentMonthStr = getActiveMonthStr();
+            currentMonthRows = (remoteConfig.monthShifts && remoteConfig.monthShifts[currentMonthStr]) || [];
             renderMonthShiftTable();
             rebuildDaySelectForActiveMonth();
           });
@@ -1570,8 +1645,17 @@
           });
         }
 
+        // Firestore から設定読み込み
+        await loadRemoteConfig();
+
+        if (monthPicker) {
+          currentMonthStr = getActiveMonthStr();
+          currentMonthRows = (remoteConfig.monthShifts && remoteConfig.monthShifts[currentMonthStr]) || [];
+        }
+
         renderMonthShiftTable();
         rebuildDaySelectForActiveMonth();
+        applyAllRotaryFromRemote();
 
         updateNowColumn(false);
         setInterval(() => updateNowColumn(true), 60000);
